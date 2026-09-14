@@ -1,0 +1,43 @@
+name: Verify Seeded Catalogue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-seeded-catalogue.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://jeafuafahcylgooeapkj.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_nHxcbekyzVCNCFl28a3hhw_TumLosqY
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - name: Start production server
+        run: |
+          npm start > /tmp/michael-seed.log 2>&1 &
+          sleep 6
+      - name: Check seeded catalogue
+        run: |
+          set -e
+          for path in / /products /products/signature-18k-gold-jewellery-set /products/21k-gold-long-necklace /products/floral-gold-necklace-set /products/diamond-drop-necklace-set; do
+            code=$(curl --max-time 20 -sS -o /tmp/page.html -w "%{http_code}" "http://127.0.0.1:3000$path")
+            echo "$path -> $code"
+            test "$code" = "200"
+          done
+          curl --max-time 20 -sS http://127.0.0.1:3000/products | grep -q "Signature 18K Gold Jewellery Set"
+          curl --max-time 20 -sS http://127.0.0.1:3000/products/signature-18k-gold-jewellery-set | grep -q "Contact for price"
+      - name: Print server log
+        if: always()
+        run: cat /tmp/michael-seed.log || true
