@@ -32,17 +32,18 @@ export const stockLabel: Record<string, string> = {
   on_request: "On Request",
 };
 
+// Michael Jewellery is the permanent brand for this project.
+// Keep identity/contact details here so an old local .env file cannot silently
+// restore the previous Mi Diamond branding.
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Michael Jewellery",
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE ?? "Fine Jewellery · Kuwait",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "96597850983",
-  instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "michael.jewellerykwt",
-  phone: process.env.NEXT_PUBLIC_PHONE ?? "+965 2266 1269",
-  mobile: process.env.NEXT_PUBLIC_MOBILE ?? "+965 9785 0983",
+  name: "Michael Jewellery",
+  tagline: "Fine Jewellery · Kuwait",
+  whatsapp: "96597850983",
+  instagram: "michael.jewellerykwt",
+  phone: "+965 2266 1269",
+  mobile: "+965 9785 0983",
   email: process.env.NEXT_PUBLIC_EMAIL ?? "",
-  address:
-    process.env.NEXT_PUBLIC_ADDRESS ??
-    "Hawalli, Ibn Khaldoon St., Al-Haddad Complex, Shop 3, Kuwait",
+  address: "Hawalli, Ibn Khaldoon St., Al-Haddad Complex, Shop 3, Kuwait",
 };
 
 export function whatsappUrl(message?: string) {
