@@ -82,9 +82,9 @@ export default async function AdminOrdersPage({
               <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">No</th>
               <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Customer</th>
               <th className="hidden md:table-cell px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Phone</th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400 text-right">Tutar</th>
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400 text-right">Amount</th>
               <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Status</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Tarih</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-700/5">

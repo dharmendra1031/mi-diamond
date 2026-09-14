@@ -81,7 +81,7 @@ export default async function AdminOrderDetailPage({
                 <div className="flex items-start gap-2 sm:col-span-2">
                   <MapPin className="h-4 w-4 mt-0.5 text-gold-500" />
                   <div>
-                    <dt className="text-xs text-ink-400">Adres</dt>
+                    <dt className="text-xs text-ink-400">Address</dt>
                     <dd className="text-ink-700">
                       {[
                         order.address_line,

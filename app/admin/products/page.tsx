@@ -62,7 +62,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                 Category
               </th>
               <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400 text-right">
-                Fiyat
+                Price
               </th>
               <th className="hidden sm:table-cell px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">
                 Status
@@ -88,7 +88,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center text-xs text-ink-300">
-                            —
+                            -
                           </div>
                         )}
                       </div>
@@ -103,7 +103,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                     </div>
                   </td>
                   <td className="hidden md:table-cell px-4 py-3 text-ink-500">
-                    {p.categories?.name ?? "—"}
+                    {p.categories?.name ?? "-"}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="font-medium text-ink-700">

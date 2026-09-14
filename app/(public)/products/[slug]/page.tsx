@@ -17,6 +17,7 @@ import {
 } from "@/lib/format";
 import { ProductCard } from "@/components/product-card";
 import { ProductGallery } from "@/components/product-gallery";
+import { getDisplayImages } from "@/lib/product-images";
 import type { Product, ProductWithCategory } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -76,7 +77,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1.08fr_.92fr] lg:gap-16 xl:gap-20">
         <ProductGallery
-          images={product.images}
+          images={getDisplayImages(product)}
           name={product.name}
           discount={discount}
         />

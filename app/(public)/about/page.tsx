@@ -54,7 +54,7 @@ export default async function AboutPage() {
                 MJ
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#120b0d]/55 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">
               <p className="font-serif text-2xl">{siteConfig.name}</p>
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-200">

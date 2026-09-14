@@ -63,7 +63,7 @@ export function CheckoutForm({
     };
 
     if (!payload.customer_name || !payload.customer_phone) {
-      setError("Ad soyad ve telefon zorunludur.");
+      setError("Full name and phone are required.");
       setLoading(false);
       return;
     }
@@ -102,7 +102,7 @@ export function CheckoutForm({
                 <Link href={`/login?next=/order`} className="text-gold-600 hover:underline font-medium">
                   Sign in
                 </Link>{" "}
-                — your details will be filled automatically and your order will be saved to your account
+                - your details will be filled automatically and your order will be saved to your account
                 kaydedilsin. Misafir olarak da devam edebilirsiniz.
               </p>
             </div>
@@ -135,7 +135,7 @@ export function CheckoutForm({
 
         <fieldset className="rounded-2xl bg-white p-6 shadow-soft">
           <legend className="px-2 font-serif text-lg text-ink-700">
-            Delivery Address <span className="text-xs text-ink-400">(opsiyonel)</span>
+            Delivery Address <span className="text-xs text-ink-400">(optional)</span>
           </legend>
           <p className="mt-1 px-2 text-xs text-ink-400">
             Leave this blank if you want to pick up from the store.

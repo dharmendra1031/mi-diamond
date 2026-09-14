@@ -2,12 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { discountPercent, formatPrice } from "@/lib/format";
+import { getDisplayCover } from "@/lib/product-images";
 import type { Product } from "@/lib/supabase/types";
 
 export function ProductCard({ product }: { product: Product }) {
   const hasPrice = product.price > 0;
   const discount = hasPrice ? discountPercent(product.price, product.old_price) : null;
-  const cover = product.images[0];
+  const cover = getDisplayCover(product);
   const soldOut = product.stock_status === "sold_out";
   const detail = [product.stone, product.metal].filter(Boolean).join(" / ");
 

@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product-card";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 import { getSiteAssetMap } from "@/lib/site-assets";
+import { getDisplayCover } from "@/lib/product-images";
 import type { Product, Category } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -56,13 +57,14 @@ export default async function HomePage() {
   const homeHero = siteAssets.home_hero;
 
   const showcaseImages = Array.from(
-    new Set(catalogProducts.flatMap((product) => product.images ?? [])),
+    new Set(catalogProducts.map((product) => getDisplayCover(product)).filter(Boolean)),
   ).slice(0, 4);
 
   function categoryCover(categoryId: string) {
-    return catalogProducts.find(
+    const product = catalogProducts.find(
       (product) => product.category_id === categoryId && product.images?.length > 0,
-    )?.images?.[0];
+    );
+    return product ? getDisplayCover(product) : undefined;
   }
 
   return (
@@ -72,12 +74,12 @@ export default async function HomePage() {
           <div className="flex items-center px-5 py-16 sm:px-10 lg:px-[max(3rem,calc((100vw-80rem)/2))] lg:py-24">
             <div className="max-w-xl">
               <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#e8c768]">
-                Fine Jewellery · Hawalli, Kuwait
+                Fine Jewellery / Hawalli, Kuwait
               </p>
               <h1 className="mt-6 max-w-[11ch] font-serif text-[3.2rem] leading-[0.94] text-white sm:max-w-none sm:text-6xl lg:text-7xl">
                 Jewellery made to be <span className="italic text-[#e8c768]">remembered.</span>
               </h1>
-              <p className="mt-7 max-w-lg text-sm font-medium leading-7 text-white/68 sm:text-base">
+              <p className="mt-7 max-w-[32ch] text-sm font-medium leading-7 text-white/85 sm:max-w-lg sm:text-base">
                 Discover refined gold and diamond jewellery selected for celebrations,
                 gifting, and everyday elegance at Michael Jewellery Kuwait.
               </p>
@@ -141,7 +143,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="absolute bottom-7 left-7 right-7 flex items-end justify-between gap-5 rounded-2xl border border-white/10 bg-black/25 p-5 backdrop-blur-md sm:bottom-10 sm:left-10 sm:right-10">
+            <div className="absolute bottom-7 left-7 right-7 flex items-end justify-between gap-5 rounded-2xl border border-white/10 bg-[#120b0d]/35 p-5 backdrop-blur-md sm:bottom-10 sm:left-10 sm:right-10">
               <div>
                 <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#e8c768]">
                   Michael Jewellery
@@ -244,7 +246,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#120b0d]/85 via-[#120b0d]/10 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-6 text-cream sm:p-7">
                     <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-gold-100">Collection</p>
                     <h3 className="mt-2 font-serif text-3xl leading-none">{category.name}</h3>
@@ -284,7 +286,7 @@ export default async function HomePage() {
               {showcaseImages.map((src, index) => (
                 <div
                   key={src}
-                  className={`relative overflow-hidden rounded-2xl border border-white/10 bg-black ${index % 2 === 0 ? "aspect-[3/4]" : "mt-6 aspect-[3/4]"}`}
+                  className={`relative overflow-hidden rounded-2xl border border-white/10 bg-[#120b0d] ${index % 2 === 0 ? "aspect-[3/4]" : "mt-6 aspect-[3/4]"}`}
                 >
                   <Image
                     src={src}

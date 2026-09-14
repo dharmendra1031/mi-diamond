@@ -40,7 +40,7 @@ export default async function AdminCategoriesPage({
             <thead className="border-b border-ink-700/10 bg-cream/40 text-left">
               <tr>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Order</th>
-                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Ad</th>
+                <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Name</th>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Slug</th>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400 text-right">Product</th>
                 <th></th>

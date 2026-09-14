@@ -2,6 +2,7 @@
 
 import { Heart } from "lucide-react";
 import { useWishlist } from "./wishlist-context";
+import { getDisplayCover } from "@/lib/product-images";
 import type { Product } from "@/lib/supabase/types";
 
 export function WishlistButton({
@@ -22,7 +23,7 @@ export function WishlistButton({
       slug: product.slug,
       name: product.name,
       price: product.price,
-      image: product.images[0] ?? null,
+      image: getDisplayCover(product) ?? null,
     });
   }
 

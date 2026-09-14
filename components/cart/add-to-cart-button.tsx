@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ShoppingBag, Check } from "lucide-react";
 import { useCart } from "./cart-context";
+import { getDisplayCover } from "@/lib/product-images";
 import type { Product } from "@/lib/supabase/types";
 
 export function AddToCartButton({ product }: { product: Product }) {
@@ -26,7 +27,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       slug: product.slug,
       name: product.name,
       price: product.price,
-      image: product.images[0] ?? null,
+      image: getDisplayCover(product) ?? null,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
@@ -36,11 +37,11 @@ export function AddToCartButton({ product }: { product: Product }) {
     <button onClick={onClick} className="btn-primary">
       {added ? (
         <>
-          <Check className="h-4 w-4" /> Carte Addndi
+          <Check className="h-4 w-4" /> Added to Cart
         </>
       ) : (
         <>
-          <ShoppingBag className="h-4 w-4" /> Carte Add
+          <ShoppingBag className="h-4 w-4" /> Add to Cart
         </>
       )}
     </button>
