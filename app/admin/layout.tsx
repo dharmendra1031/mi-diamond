@@ -5,24 +5,28 @@ import {
   LayoutGrid,
   Package,
   Tags,
+  Images,
   LogOut,
   ExternalLink,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/format";
+import { getSiteAssetMap } from "@/lib/site-assets";
 import { signOutAction } from "./actions";
 
 export const metadata = { title: "Admin" };
 
-const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
-
-function BrandLogo({ size = 40 }: { size?: number }) {
+function BrandLogo({ src, size = 40 }: { src?: string; size?: number }) {
   return (
     <span
-      className="relative shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-gold-400/50"
+      className="relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-white font-serif text-sm text-ink-700 ring-1 ring-gold-400/50"
       style={{ width: size, height: size }}
     >
-      <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes={`${size}px`} className="object-contain" />
+      {src ? (
+        <Image src={src} alt="Michael Jewellery logo" fill sizes={`${size}px`} className="object-contain" />
+      ) : (
+        <span>MJ</span>
+      )}
     </span>
   );
 }
@@ -44,11 +48,14 @@ export default async function AdminLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const assets = await getSiteAssetMap(["logo"]);
+  const logoSrc = assets.logo;
 
   const nav = [
     { href: "/admin", label: "Dashboard", icon: LayoutGrid },
     { href: "/admin/products", label: "Products", icon: Package },
     { href: "/admin/categories", label: "Categories", icon: Tags },
+    { href: "/admin/site-images", label: "Site Images", icon: Images },
   ];
 
   return (
@@ -57,7 +64,7 @@ export default async function AdminLayout({
         <aside className="hidden w-64 flex-col border-r border-ink-700/10 bg-white md:flex">
           <div className="border-b border-ink-700/10 p-6">
             <Link href="/admin" className="flex items-center gap-3 text-ink-700">
-              <BrandLogo />
+              <BrandLogo src={logoSrc} />
               <span>
                 <span className="block font-serif text-lg leading-none">{siteConfig.name}</span>
                 <span className="mt-1 block text-[9px] uppercase tracking-[0.2em] text-ink-400">
@@ -109,7 +116,7 @@ export default async function AdminLayout({
         <div className="flex-1 overflow-x-hidden">
           <header className="flex items-center justify-between border-b border-ink-700/10 bg-white px-4 py-3 md:hidden">
             <Link href="/admin" className="flex items-center gap-2 text-ink-700">
-              <BrandLogo size={36} />
+              <BrandLogo src={logoSrc} size={36} />
               <span className="font-serif text-base">{siteConfig.name}</span>
             </Link>
             <form action={signOutAction}>
