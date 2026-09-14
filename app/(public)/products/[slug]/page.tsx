@@ -41,8 +41,10 @@ export default async function ProductDetailPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const discount = discountPercent(product.price, product.old_price);
-  const message = `Hello, I would like information about ${product.name} (${formatPrice(product.price, product.currency)}).`;
+  const hasPrice = product.price > 0;
+  const discount = hasPrice ? discountPercent(product.price, product.old_price) : null;
+  const priceText = hasPrice ? formatPrice(product.price, product.currency) : "price enquiry";
+  const message = `Hello Michael Jewellery, I would like information about ${product.name} (${priceText}).`;
 
   const { data: relatedRaw } = product.category_id
     ? await supabase
@@ -94,12 +96,20 @@ export default async function ProductDetailPage({ params }: Props) {
           </h1>
 
           <div className="mt-7 flex items-baseline gap-4 border-b border-ink-700/10 pb-7">
-            <span className="font-serif text-3xl text-ink-900 md:text-4xl">
-              {formatPrice(product.price, product.currency)}
-            </span>
-            {product.old_price && (
-              <span className="text-base text-ink-300 line-through">
-                {formatPrice(product.old_price, product.currency)}
+            {hasPrice ? (
+              <>
+                <span className="font-serif text-3xl text-ink-900 md:text-4xl">
+                  {formatPrice(product.price, product.currency)}
+                </span>
+                {product.old_price && (
+                  <span className="text-base text-ink-300 line-through">
+                    {formatPrice(product.old_price, product.currency)}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="font-serif text-3xl text-gold-700 md:text-4xl">
+                Contact for price
               </span>
             )}
           </div>
