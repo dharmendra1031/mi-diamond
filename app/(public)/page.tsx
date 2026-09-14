@@ -11,6 +11,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product-card";
 import { siteConfig, whatsappUrl } from "@/lib/format";
+import { getSiteAssetMap } from "@/lib/site-assets";
 import type { Product, Category } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -49,6 +50,10 @@ export default async function HomePage() {
   } catch {
     // Keep build/preview working when Supabase env vars are missing.
   }
+
+  const siteAssets = await getSiteAssetMap(["logo", "home_hero"]);
+  const logoSrc = siteAssets.logo;
+  const homeHero = siteAssets.home_hero;
 
   const showcaseImages = Array.from(
     new Set(catalogProducts.flatMap((product) => product.images ?? [])),
@@ -120,15 +125,19 @@ export default async function HomePage() {
             <div className="absolute right-[8%] top-[18%] h-72 w-72 rounded-full border border-[#d7a52d]/10 sm:h-96 sm:w-96" />
 
             <div className="absolute inset-0 flex items-center justify-center px-8 pb-28 pt-12">
-              <div className="relative aspect-square w-full max-w-[430px] overflow-hidden rounded-full border border-[#d7a52d]/35 bg-white shadow-[0_30px_90px_rgba(0,0,0,.45)]">
-                <Image
-                  src="/michael-jewellery/michael-jewellery-logo.webp"
-                  alt="Michael Jewellery"
-                  fill
-                  priority
-                  sizes="430px"
-                  className="object-contain p-7 sm:p-10"
-                />
+              <div className="relative aspect-[4/5] w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-[#d7a52d]/35 bg-[#160d10] shadow-[0_30px_90px_rgba(0,0,0,.45)]">
+                {homeHero ? (
+                  <Image
+                    src={homeHero}
+                    alt="Michael Jewellery featured collection"
+                    fill
+                    priority
+                    sizes="430px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center font-serif text-6xl text-[#e8c768]/75">MJ</div>
+                )}
               </div>
             </div>
 
@@ -220,14 +229,18 @@ export default async function HomePage() {
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_70%_25%,#5f2032_0%,#2d1019_35%,#120a0c_78%)]">
-                      <div className="relative h-28 w-28 overflow-hidden rounded-full border border-[#d7a52d]/30 bg-white/95 shadow-2xl">
-                        <Image
-                          src="/michael-jewellery/michael-jewellery-logo.webp"
-                          alt=""
-                          fill
-                          sizes="112px"
-                          className="object-contain p-3"
-                        />
+                      <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border border-[#d7a52d]/30 bg-white/95 font-serif text-2xl text-ink-700 shadow-2xl">
+                        {logoSrc ? (
+                          <Image
+                            src={logoSrc}
+                            alt="Michael Jewellery logo"
+                            fill
+                            sizes="112px"
+                            className="object-contain p-3"
+                          />
+                        ) : (
+                          <span>MJ</span>
+                        )}
                       </div>
                     </div>
                   )}
