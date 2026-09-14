@@ -22,3 +22,5 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+
+# Temporary workflow used only to validate the current release candidate.
