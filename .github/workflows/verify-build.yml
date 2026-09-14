@@ -23,3 +23,25 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Check lint command
+        continue-on-error: true
+        run: npm run lint
+      - name: Start production server
+        run: |
+          npm start > /tmp/mi-diamond.log 2>&1 &
+          echo $! > /tmp/mi-diamond.pid
+          sleep 5
+      - name: Smoke test routes
+        run: |
+          set -e
+          for path in / /products /login /register /forgot-password /reset-password /admin/login; do
+            code=$(curl --max-time 20 -sS -o /tmp/response.html -w "%{http_code}" "http://127.0.0.1:3000$path")
+            echo "$path -> $code"
+            case "$code" in
+              200|301|302|303|307|308) ;;
+              *) echo "Route failed: $path"; cat /tmp/mi-diamond.log; exit 1;;
+            esac
+          done
+      - name: Print server log
+        if: always()
+        run: cat /tmp/mi-diamond.log || true
