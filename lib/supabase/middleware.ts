@@ -10,17 +10,31 @@ const disabledStorefrontRoutes = [
   "/register",
   "/forgot-password",
   "/reset-password",
+  "/shipping-returns",
+  "/faq",
 ];
+
+const disabledAdminRoutes = ["/admin/orders"];
 
 export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isDisabledStorefrontRoute = disabledStorefrontRoutes.some(
     (route) => path === route || path.startsWith(`${route}/`),
   );
+  const isDisabledAdminRoute = disabledAdminRoutes.some(
+    (route) => path === route || path.startsWith(`${route}/`),
+  );
 
   if (isDisabledStorefrontRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/products";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  if (isDisabledAdminRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/admin";
     url.search = "";
     return NextResponse.redirect(url);
   }
