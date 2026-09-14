@@ -2,10 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { LoginForm } from "./login-form";
 import { siteConfig } from "@/lib/format";
+import { getSiteAssetMap } from "@/lib/site-assets";
 
 export const metadata = { title: "Admin Sign In" };
-
-const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
 
 export default async function LoginPage({
   searchParams,
@@ -13,12 +12,18 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const { next, error } = await searchParams;
+  const assets = await getSiteAssetMap(["logo"]);
+  const logoSrc = assets.logo;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-4 py-16">
       <Link href="/" className="flex flex-col items-center gap-3 text-ink-700">
-        <span className="relative h-20 w-20 overflow-hidden rounded-full bg-white shadow-soft ring-1 ring-gold-400/50">
-          <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes="80px" className="object-contain" priority />
+        <span className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-white font-serif text-xl shadow-soft ring-1 ring-gold-400/50">
+          {logoSrc ? (
+            <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes="80px" className="object-contain" priority />
+          ) : (
+            <span>MJ</span>
+          )}
         </span>
         <span className="font-serif text-2xl">{siteConfig.name}</span>
       </Link>
