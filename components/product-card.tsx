@@ -20,6 +20,7 @@ export function ProductCard({ product }: { product: Product }) {
               src={cover}
               alt={product.name}
               fill
+              quality={95}
               sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover transition duration-700 ease-out group-hover:scale-[1.045]"
             />
