@@ -18,15 +18,15 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: {
-    default: "Mi Diamond - Boutique Diamonds & Rings",
-    template: "%s | Mi Diamond",
+    default: "Michael Jewellery Kuwait | Fine Jewellery",
+    template: "%s | Michael Jewellery Kuwait",
   },
   description:
-    "Mi Diamond accompanies life's special moments with carefully selected diamond rings, wedding bands, and boutique designs.",
+    "Michael Jewellery in Hawalli, Kuwait presents refined gold and diamond jewellery with personal in-store consultation.",
   openGraph: {
     type: "website",
-    locale: "en_US",
-    siteName: "Mi Diamond",
+    locale: "en_KW",
+    siteName: "Michael Jewellery Kuwait",
   },
 };
 
