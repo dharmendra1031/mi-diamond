@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Diamond, MessageCircle, Star } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 import { HeaderNav } from "./header-nav";
 
@@ -10,17 +11,7 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 
-function BrandMark() {
-  return (
-    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d7a52d]/70 bg-black/25 shadow-[0_0_24px_rgba(215,165,45,.12)]">
-      <Star
-        className="absolute top-1.5 h-2.5 w-2.5 fill-[#e7b838] text-[#e7b838]"
-        strokeWidth={1}
-      />
-      <Diamond className="mt-2 h-5 w-5 text-[#e7b838]" strokeWidth={1.2} />
-    </span>
-  );
-}
+const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
 
 export function SiteHeader() {
   return (
@@ -38,7 +29,16 @@ export function SiteHeader() {
 
       <div className="container-prose flex h-[76px] items-center justify-between gap-4">
         <Link href="/" className="group flex shrink-0 items-center gap-3 text-white">
-          <BrandMark />
+          <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-white shadow-[0_0_26px_rgba(215,165,45,.18)] ring-1 ring-[#d7a52d]/60">
+            <Image
+              src={logoSrc}
+              alt="Michael Jewellery logo"
+              fill
+              sizes="48px"
+              className="object-contain"
+              priority
+            />
+          </span>
           <span>
             <span className="block font-serif text-[21px] leading-none tracking-[0.045em] text-white sm:text-[24px]">
               {siteConfig.name}
