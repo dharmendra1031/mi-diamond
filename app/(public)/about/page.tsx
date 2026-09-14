@@ -1,4 +1,5 @@
-import { Diamond, Heart, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Diamond, Gem, MapPin, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/lib/format";
 
 export const metadata = { title: "About" };
@@ -7,78 +8,79 @@ export default function AboutPage() {
   return (
     <>
       <section className="container-prose py-16 md:py-24">
-        <p className="label-eyebrow">About</p>
-        <h1 className="mt-3 font-serif text-4xl md:text-5xl text-ink-700 max-w-3xl">
-          {siteConfig.name} - a carefully curated boutique jewelry experience
+        <p className="label-eyebrow">Michael Jewellery Kuwait</p>
+        <h1 className="mt-3 max-w-3xl font-serif text-4xl text-ink-700 md:text-5xl">
+          Fine jewellery presented with a personal showroom experience.
         </h1>
-        <div className="mt-10 grid gap-12 md:grid-cols-2 md:gap-20 items-start">
-          <div className="space-y-5 text-ink-500 leading-relaxed">
+
+        <div className="mt-10 grid items-start gap-12 md:grid-cols-2 md:gap-20">
+          <div className="space-y-5 leading-relaxed text-ink-500">
             <p>
-              {siteConfig.name} is a boutique jewelry brand that brings together
-              designs for life's special moments with craftsmanship and care.
-              
+              {siteConfig.name} is a jewellery showroom in Hawalli, Kuwait, offering a curated selection of gold and diamond jewellery.
             </p>
             <p>
-              Every ring is shaped with certified stones and meticulous craftsmanship.
-              We reinterpret classic designs with a modern point of view,
-              creating collections tailored to you.
+              The collection includes statement sets, necklaces, rings, bracelets and other pieces for celebrations, gifting and everyday elegance.
             </p>
             <p>
-              Our brand aims to offer more than jewelry: a memory you will keep,
-              whether you are gifting someone you love or rewarding yourself.
-              Our pieces are designed with enduring elegance.
-              bir zarafetle sizinle olur.
+              Customers can browse the collection online and contact the showroom directly for product details, availability and personal assistance.
             </p>
+
+            <div className="mt-8 rounded-2xl border border-gold-400/20 bg-gold-50/40 p-5">
+              <div className="flex gap-3">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
+                <div>
+                  <p className="text-sm font-semibold text-ink-700">Visit Michael Jewellery</p>
+                  <p className="mt-1 text-sm leading-6 text-ink-500">{siteConfig.address}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-ink-700 to-ink-500 p-1 shadow-soft">
-            <div className="flex h-full w-full flex-col items-center justify-center rounded-[1.4rem] bg-cream">
-              <Diamond className="h-24 w-24 text-gold-400" strokeWidth={0.6} />
-              <span className="mt-4 font-serif text-2xl text-ink-700">
-                {siteConfig.name}
-              </span>
-              <span className="text-xs uppercase tracking-[0.3em] text-gold-500">
-                Est. 2026
-              </span>
+          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-ink-700 shadow-premium">
+            <Image
+              src="/michael-jewellery/michael-jewellery-1.webp"
+              alt="Michael Jewellery collection"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+              <p className="font-serif text-2xl">{siteConfig.name}</p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-200">
+                Hawalli · Kuwait
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-white border-y border-ink-700/10">
-        <div className="container-prose py-16 md:py-24">
-          <h2 className="font-serif text-3xl text-ink-700 text-center max-w-2xl mx-auto">
-            Our values are reflected in every design
-          </h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <section className="border-y border-ink-700/10 bg-white">
+        <div className="container-prose py-16 md:py-20">
+          <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                icon: ShieldCheck,
-                title: "Trust",
-                text: "Certified stones and transparent pricing.",
-              },
-              {
-                icon: Sparkles,
-                title: "Craftsmanship",
-                text: "Traditional craft meets modern details.",
-              },
-              {
-                icon: Heart,
-                title: "Emotion",
-                text: "Every design is the beginning of a story.",
-              },
-              {
                 icon: Diamond,
-                title: "Elegance",
-                text: "Timeless design, lasting elegance.",
+                title: "Curated Collection",
+                text: "Browse jewellery designs selected for different styles and occasions.",
               },
-            ].map((v) => (
-              <div key={v.title} className="text-center">
+              {
+                icon: Gem,
+                title: "Product Details",
+                text: "View product photos, descriptions, pricing and availability online.",
+              },
+              {
+                icon: MessageCircle,
+                title: "Direct Assistance",
+                text: "Contact the showroom by phone or WhatsApp for more information.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="text-center">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gold-50">
-                  <v.icon className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
+                  <item.icon className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
                 </div>
-                <h3 className="mt-5 font-serif text-xl text-ink-700">{v.title}</h3>
-                <p className="mt-2 text-sm text-ink-500 leading-relaxed">{v.text}</p>
+                <h2 className="mt-5 font-serif text-xl text-ink-700">{item.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-ink-500">{item.text}</p>
               </div>
             ))}
           </div>
