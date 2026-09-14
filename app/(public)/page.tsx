@@ -15,13 +15,6 @@ import type { Product, Category } from "@/lib/supabase/types";
 
 export const revalidate = 60;
 
-const brandImages = [
-  "/michael-jewellery/michael-jewellery-1.webp",
-  "/michael-jewellery/michael-jewellery-2.webp",
-  "/michael-jewellery/michael-jewellery-3.webp",
-  "/michael-jewellery/michael-jewellery-4.webp",
-];
-
 export default async function HomePage() {
   let featured: Product[] = [];
   let categories: Category[] = [];
@@ -56,6 +49,10 @@ export default async function HomePage() {
   } catch {
     // Keep build/preview working when Supabase env vars are missing.
   }
+
+  const showcaseImages = Array.from(
+    new Set(catalogProducts.flatMap((product) => product.images ?? [])),
+  ).slice(0, 4);
 
   function categoryCover(categoryId: string) {
     return catalogProducts.find(
@@ -249,44 +246,47 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="bg-gradient-to-br from-[#120b0d] via-[#2b0d17] to-[#110b0d] text-cream">
-        <div className="container-prose grid items-center gap-12 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
-          <div className="max-w-xl">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[#e8c768]">
-              Michael Jewellery Showcase
-            </p>
-            <p className="mt-5 font-serif text-4xl leading-[1.08] text-white md:text-5xl">
-              A closer look at the <span className="italic text-[#e8c768]">collection.</span>
-            </p>
-            <p className="mt-6 max-w-lg text-sm font-medium leading-7 text-white/65">
-              Selected visuals from Michael Jewellery. New catalogue products can be added from the admin panel with their own high-resolution images, description, and KWD price.
-            </p>
-            <Link
-              href="/products"
-              className="mt-8 inline-flex items-center gap-2 border-b border-[#d7a52d] pb-1 text-[10px] uppercase tracking-[0.2em] text-[#e8c768]"
-            >
-              View catalogue <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {brandImages.map((src, index) => (
-              <div
-                key={src}
-                className={`relative overflow-hidden rounded-2xl border border-white/10 bg-black ${index % 2 === 0 ? "aspect-[3/4]" : "mt-6 aspect-[3/4]"}`}
+      {showcaseImages.length > 0 && (
+        <section className="bg-gradient-to-br from-[#120b0d] via-[#2b0d17] to-[#110b0d] text-cream">
+          <div className="container-prose grid items-center gap-12 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
+            <div className="max-w-xl">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[#e8c768]">
+                Michael Jewellery Showcase
+              </p>
+              <p className="mt-5 font-serif text-4xl leading-[1.08] text-white md:text-5xl">
+                A closer look at the <span className="italic text-[#e8c768]">collection.</span>
+              </p>
+              <p className="mt-6 max-w-lg text-sm font-medium leading-7 text-white/65">
+                Selected catalogue pieces from Michael Jewellery. Product imagery is served from the live catalogue.
+              </p>
+              <Link
+                href="/products"
+                className="mt-8 inline-flex items-center gap-2 border-b border-[#d7a52d] pb-1 text-[10px] uppercase tracking-[0.2em] text-[#e8c768]"
               >
-                <Image
-                  src={src}
-                  alt={`${siteConfig.name} jewellery showcase ${index + 1}`}
-                  fill
-                  sizes="(min-width: 1024px) 280px, 45vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
+                View catalogue <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {showcaseImages.map((src, index) => (
+                <div
+                  key={src}
+                  className={`relative overflow-hidden rounded-2xl border border-white/10 bg-black ${index % 2 === 0 ? "aspect-[3/4]" : "mt-6 aspect-[3/4]"}`}
+                >
+                  <Image
+                    src={src}
+                    alt={`${siteConfig.name} jewellery showcase ${index + 1}`}
+                    fill
+                    sizes="(min-width: 1024px) 280px, 45vw"
+                    className="object-cover"
+                    quality={95}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="container-prose py-20 md:py-28">
         <div className="mb-10 flex items-end justify-between gap-5">
