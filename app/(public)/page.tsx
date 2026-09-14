@@ -59,6 +59,12 @@ export default async function HomePage() {
   const showcaseImages = Array.from(
     new Set(catalogProducts.map((product) => getDisplayCover(product)).filter(Boolean)),
   ).slice(0, 4);
+  const heroProduct =
+    catalogProducts.find((product) => product.slug === "diamond-drop-necklace-set") ??
+    catalogProducts.find((product) => product.slug.includes("necklace")) ??
+    catalogProducts[0];
+  const heroVisual = heroProduct ? getDisplayCover(heroProduct) : (showcaseImages[0] ?? homeHero);
+  const heroAccentImages = showcaseImages.filter((image) => image !== heroVisual).slice(0, 2);
 
   function categoryCover(categoryId: string) {
     const product = catalogProducts.find(
@@ -121,43 +127,62 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative min-h-[560px] overflow-hidden bg-[radial-gradient(circle_at_65%_35%,#5f2032_0%,#2b0d17_34%,#10090b_72%)] lg:min-h-full">
-            <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(120deg,transparent_20%,rgba(232,199,104,.16)_50%,transparent_80%)]" />
-            <div className="absolute left-[12%] top-[12%] h-48 w-48 rounded-full border border-[#d7a52d]/10 sm:h-64 sm:w-64" />
-            <div className="absolute right-[8%] top-[18%] h-72 w-72 rounded-full border border-[#d7a52d]/10 sm:h-96 sm:w-96" />
+          <div className="relative min-h-[560px] overflow-hidden bg-[linear-gradient(135deg,#241014_0%,#5a2431_46%,#1a0d10_100%)] lg:min-h-full">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(232,199,104,.24),transparent_22rem),radial-gradient(circle_at_86%_76%,rgba(255,255,255,.12),transparent_24rem)]" />
 
-            <div className="absolute inset-0 flex items-center justify-center px-8 pb-28 pt-12">
-              <div className="relative aspect-[4/5] w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-[#d7a52d]/35 bg-[#160d10] shadow-[0_30px_90px_rgba(0,0,0,.45)]">
-                {homeHero ? (
-                  <Image
-                    src={homeHero}
-                    alt="Michael Jewellery featured collection"
-                    fill
-                    priority
-                    sizes="430px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center font-serif text-6xl text-[#e8c768]/75">MJ</div>
+            <div className="absolute inset-0 grid place-items-center px-5 py-10 sm:px-10 lg:px-12">
+              <div className="relative w-full max-w-[620px]">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-[#d7a52d]/35 bg-[#211014] shadow-[0_34px_100px_rgba(12,6,7,.55)] sm:aspect-[5/6]">
+                  {heroVisual ? (
+                    <Image
+                      src={heroVisual}
+                      alt="Michael Jewellery featured gold and diamond collection"
+                      fill
+                      priority
+                      sizes="(min-width: 1024px) 48vw, 100vw"
+                      className="object-cover"
+                      quality={95}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center font-serif text-6xl text-[#e8c768]/75">MJ</div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#120b0d]/72 via-transparent to-transparent" />
+                  <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/15 bg-[#160d10]/55 p-4 backdrop-blur-md">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#e8c768]">
+                      Featured Jewellery
+                    </p>
+                    <p className="mt-1 font-serif text-2xl text-white sm:text-3xl">Gold & Diamond Selection</p>
+                  </div>
+                </div>
+
+                {logoSrc && (
+                  <div className="absolute -left-4 top-6 hidden h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#d7a52d]/40 bg-white shadow-2xl sm:flex">
+                    <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes="96px" className="object-contain p-3" />
+                  </div>
+                )}
+
+                {heroAccentImages.length > 0 && (
+                  <div className="absolute -bottom-5 right-4 hidden gap-3 sm:flex">
+                    {heroAccentImages.map((src, index) => (
+                      <div
+                        key={src}
+                        className={`relative h-28 w-24 overflow-hidden rounded-2xl border border-[#d7a52d]/35 bg-[#160d10] shadow-2xl ${index === 1 ? "mt-5" : ""}`}
+                      >
+                        <Image src={src} alt={`Michael Jewellery detail ${index + 1}`} fill sizes="96px" className="object-cover" />
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
 
-            <div className="absolute bottom-7 left-7 right-7 flex items-end justify-between gap-5 rounded-2xl border border-white/10 bg-[#120b0d]/35 p-5 backdrop-blur-md sm:bottom-10 sm:left-10 sm:right-10">
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#e8c768]">
-                  Michael Jewellery
-                </p>
-                <p className="mt-1 font-serif text-2xl text-white sm:text-3xl">Hawalli, Kuwait</p>
-              </div>
-              <Link
-                href="/contact"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-[#d7a52d] hover:bg-[#d7a52d] hover:text-black"
-                aria-label="Visit Michael Jewellery contact details"
-              >
-                <MapPin className="h-4 w-4" />
-              </Link>
-            </div>
+            <Link
+              href="/contact"
+              className="absolute bottom-6 right-6 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-[#160d10]/45 text-white backdrop-blur transition hover:border-[#d7a52d] hover:bg-[#d7a52d] hover:text-[#160d10]"
+              aria-label="Visit Michael Jewellery contact details"
+            >
+              <MapPin className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
