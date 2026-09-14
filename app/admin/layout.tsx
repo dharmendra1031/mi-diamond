@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
 import {
@@ -5,9 +6,7 @@ import {
   Package,
   Tags,
   LogOut,
-  Diamond,
   ExternalLink,
-  Star,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/format";
@@ -15,11 +14,15 @@ import { signOutAction } from "./actions";
 
 export const metadata = { title: "Admin" };
 
-function BrandMark() {
+const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
+
+function BrandLogo({ size = 40 }: { size?: number }) {
   return (
-    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-400/60 bg-gold-400/10">
-      <Star className="absolute top-1 h-2 w-2 fill-gold-400 text-gold-400" strokeWidth={1} />
-      <Diamond className="mt-1.5 h-4 w-4 text-gold-400" strokeWidth={1.2} />
+    <span
+      className="relative shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-gold-400/50"
+      style={{ width: size, height: size }}
+    >
+      <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes={`${size}px`} className="object-contain" />
     </span>
   );
 }
@@ -54,7 +57,7 @@ export default async function AdminLayout({
         <aside className="hidden w-64 flex-col border-r border-ink-700/10 bg-white md:flex">
           <div className="border-b border-ink-700/10 p-6">
             <Link href="/admin" className="flex items-center gap-3 text-ink-700">
-              <BrandMark />
+              <BrandLogo />
               <span>
                 <span className="block font-serif text-lg leading-none">{siteConfig.name}</span>
                 <span className="mt-1 block text-[9px] uppercase tracking-[0.2em] text-ink-400">
@@ -106,7 +109,7 @@ export default async function AdminLayout({
         <div className="flex-1 overflow-x-hidden">
           <header className="flex items-center justify-between border-b border-ink-700/10 bg-white px-4 py-3 md:hidden">
             <Link href="/admin" className="flex items-center gap-2 text-ink-700">
-              <BrandMark />
+              <BrandLogo size={36} />
               <span className="font-serif text-base">{siteConfig.name}</span>
             </Link>
             <form action={signOutAction}>
