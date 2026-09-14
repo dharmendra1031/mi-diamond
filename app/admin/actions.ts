@@ -11,21 +11,17 @@ export async function signOutAction() {
   redirect("/admin/login");
 }
 
-// =====================================================
-// PRODUCTS
-// =====================================================
-
 function parsePrice(value: FormDataEntryValue | null): number {
   if (!value) return 0;
   const cleaned = String(value).replace(/[^\d,.-]/g, "").replace(",", ".");
-  const n = parseFloat(cleaned);
-  return Number.isFinite(n) ? n : 0;
+  const number = parseFloat(cleaned);
+  return Number.isFinite(number) ? number : 0;
 }
 
 function parseOptionalPrice(value: FormDataEntryValue | null): number | null {
   if (!value || !String(value).trim()) return null;
-  const n = parsePrice(value);
-  return n > 0 ? n : null;
+  const number = parsePrice(value);
+  return number > 0 ? number : null;
 }
 
 export async function createProductAction(formData: FormData) {
@@ -36,10 +32,8 @@ export async function createProductAction(formData: FormData) {
 
   const baseSlug = slugify(name);
   const slug = `${baseSlug}-${Date.now().toString(36).slice(-4)}`;
-
   const price = parsePrice(formData.get("price"));
   const oldPrice = parseOptionalPrice(formData.get("old_price"));
-
   const images = formData.getAll("images").map(String).filter(Boolean);
 
   const payload = {
@@ -49,6 +43,7 @@ export async function createProductAction(formData: FormData) {
     category_id: String(formData.get("category_id") ?? "") || null,
     price,
     old_price: oldPrice && oldPrice > price ? oldPrice : null,
+    currency: "KWD",
     images,
     metal: String(formData.get("metal") ?? "").trim() || null,
     stone: String(formData.get("stone") ?? "").trim() || null,
@@ -89,6 +84,7 @@ export async function updateProductAction(id: string, formData: FormData) {
     category_id: String(formData.get("category_id") ?? "") || null,
     price,
     old_price: oldPrice && oldPrice > price ? oldPrice : null,
+    currency: "KWD",
     images,
     metal: String(formData.get("metal") ?? "").trim() || null,
     stone: String(formData.get("stone") ?? "").trim() || null,
@@ -120,10 +116,6 @@ export async function deleteProductAction(id: string) {
   redirect("/admin/products");
 }
 
-// =====================================================
-// CATEGORIES
-// =====================================================
-
 export async function upsertCategoryAction(formData: FormData) {
   const supabase = await createClient();
 
@@ -132,19 +124,19 @@ export async function upsertCategoryAction(formData: FormData) {
   if (!name) return { error: "Category name is required." };
 
   const slug = String(formData.get("slug") ?? slugify(name)).trim();
-  const sort_order = parseInt(String(formData.get("sort_order") ?? "0"), 10) || 0;
+  const sortOrder = parseInt(String(formData.get("sort_order") ?? "0"), 10) || 0;
   const description = String(formData.get("description") ?? "").trim() || null;
 
   if (id) {
     const { error } = await supabase
       .from("categories")
-      .update({ name, slug, sort_order, description })
+      .update({ name, slug, sort_order: sortOrder, description })
       .eq("id", id);
     if (error) return { error: error.message };
   } else {
     const { error } = await supabase
       .from("categories")
-      .insert({ name, slug, sort_order, description });
+      .insert({ name, slug, sort_order: sortOrder, description });
     if (error) return { error: error.message };
   }
 
