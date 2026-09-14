@@ -1,28 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
-  Diamond,
   Instagram,
   Phone,
   Mail,
   MapPin,
   LayoutGrid,
   MessageCircle,
-  Star,
 } from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 import { getCurrentProfile } from "@/lib/supabase/auth";
 
-function BrandMark() {
-  return (
-    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d7a52d]/70 bg-black/20">
-      <Star
-        className="absolute top-1.5 h-2.5 w-2.5 fill-[#e7b838] text-[#e7b838]"
-        strokeWidth={1}
-      />
-      <Diamond className="mt-2 h-5 w-5 text-[#e7b838]" strokeWidth={1.2} />
-    </span>
-  );
-}
+const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
 
 export async function SiteFooter() {
   let isAdmin = false;
@@ -41,8 +30,16 @@ export async function SiteFooter() {
       <div className="container-prose py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.35fr_.65fr_.9fr]">
           <div>
-            <div className="flex items-center gap-3">
-              <BrandMark />
+            <div className="flex items-center gap-4">
+              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-[#d7a52d]/60">
+                <Image
+                  src={logoSrc}
+                  alt="Michael Jewellery logo"
+                  fill
+                  sizes="56px"
+                  className="object-contain"
+                />
+              </span>
               <div>
                 <span className="block font-serif text-2xl tracking-[0.06em]">
                   {siteConfig.name}
