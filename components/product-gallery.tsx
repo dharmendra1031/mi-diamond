@@ -26,7 +26,7 @@ export function ProductGallery({
             priority
             quality={95}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover"
+            className="object-contain p-3"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -56,7 +56,7 @@ export function ProductGallery({
                 fill
                 quality={90}
                 sizes="(min-width: 1024px) 10vw, 20vw"
-                className="object-cover"
+                className="object-contain p-1"
               />
             </button>
           ))}

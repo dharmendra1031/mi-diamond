@@ -9,7 +9,11 @@ import type { SiteAsset, SiteAssetKey } from "@/lib/site-assets";
 
 const definitions: Array<{ key: SiteAssetKey; label: string; hint: string }> = [
   { key: "logo", label: "Site Logo", hint: "Used in header, footer and admin branding." },
-  { key: "home_hero", label: "Home Hero Image", hint: "Main visual on the homepage hero section." },
+  {
+    key: "home_hero",
+    label: "Home Hero Image",
+    hint: "Main homepage campaign image. Use a wide jewellery photo around 2400x1600px with the product centered.",
+  },
   { key: "about_image", label: "About Page Image", hint: "Main image on the About page." },
 ];
 

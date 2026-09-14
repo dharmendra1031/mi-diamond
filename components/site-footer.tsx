@@ -51,7 +51,7 @@ export async function SiteFooter() {
                   {siteConfig.name}
                 </span>
                 <span className="mt-1 block text-[9px] uppercase tracking-[0.32em] text-[#e8c768]/75">
-                  Fine Jewellery · Kuwait
+                  Fine Jewellery - Kuwait
                 </span>
               </div>
             </div>

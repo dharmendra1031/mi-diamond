@@ -22,7 +22,7 @@ export default async function ProfilePage({
 
       {ok && (
         <div className="mt-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-          Bilgileriniz kaydedildi.
+          Your details have been saved.
         </div>
       )}
 

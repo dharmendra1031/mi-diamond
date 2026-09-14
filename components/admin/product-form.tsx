@@ -200,16 +200,16 @@ export function ProductForm({
                 <><Upload className="h-4 w-4" /> Upload Photos</>
               )}
             </label>
-            <p className="mt-2 text-xs text-ink-400">
-              Select one or more images. The first image is used as the product cover.
+            <p className="mt-2 text-xs text-ink-500">
+              Select one or more square or vertical product photos. The first image is used as the product cover.
             </p>
           </div>
 
           {images.length > 0 && (
             <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
               {images.map((url, index) => (
-                <div key={`${url}-${index}`} className="group relative aspect-square overflow-hidden rounded-lg bg-ink-50">
-                  <Image src={url} alt={`Product image ${index + 1}`} fill sizes="120px" className="object-cover" />
+                <div key={`${url}-${index}`} className="group relative aspect-square overflow-hidden rounded-lg bg-cream">
+                  <Image src={url} alt={`Product image ${index + 1}`} fill sizes="120px" className="object-contain p-1" />
                   {index === 0 && (
                     <span className="absolute left-1 top-1 rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-medium text-ink-700">
                       Cover

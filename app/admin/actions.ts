@@ -123,7 +123,10 @@ export async function upsertCategoryAction(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return { error: "Category name is required." };
 
-  const slug = String(formData.get("slug") ?? slugify(name)).trim();
+  const enteredSlug = String(formData.get("slug") ?? "").trim();
+  const slug = slugify(enteredSlug || name);
+  if (!slug) return { error: "Category slug could not be generated." };
+
   const sortOrder = parseInt(String(formData.get("sort_order") ?? "0"), 10) || 0;
   const description = String(formData.get("description") ?? "").trim() || null;
 
@@ -148,6 +151,12 @@ export async function upsertCategoryAction(formData: FormData) {
 
 export async function deleteCategoryAction(id: string) {
   const supabase = await createClient();
+  const { error: productError } = await supabase
+    .from("products")
+    .update({ category_id: null })
+    .eq("category_id", id);
+  if (productError) return { error: productError.message };
+
   const { error } = await supabase.from("categories").delete().eq("id", id);
   if (error) return { error: error.message };
 

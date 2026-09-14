@@ -51,8 +51,8 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         />
       </form>
 
-      <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow-soft">
-        <table className="w-full text-sm">
+      <div className="mt-8 overflow-x-auto rounded-2xl bg-white shadow-soft">
+        <table className="min-w-[760px] w-full text-sm">
           <thead className="border-b border-ink-700/10 bg-cream/40 text-left">
             <tr>
               <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">
@@ -77,14 +77,14 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                 <tr key={p.id} className="hover:bg-cream/40">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-ink-50 shrink-0">
+                      <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-cream shrink-0">
                         {p.images[0] ? (
                           <Image
                             src={p.images[0]}
                             alt={p.name}
                             fill
                             sizes="48px"
-                            className="object-cover"
+                            className="object-contain p-1"
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center text-xs text-ink-300">

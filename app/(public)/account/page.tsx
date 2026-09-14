@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Package, Heart, ShoppingBag, Settings } from "lucide-react";
+import { ArrowRight, Package, Settings, UserCircle, Gem } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/supabase/auth";
 import { formatPrice } from "@/lib/format";
@@ -50,7 +50,7 @@ export default async function AccountDashboardPage() {
         >
           <Settings className="h-5 w-5 text-gold-400" />
           <div className="flex-1">
-            <p className="font-medium">Admin Panelne Git</p>
+            <p className="font-medium">Go to Admin Panel</p>
             <p className="text-xs text-cream/70">
               Manage products, categories, and order requests
             </p>
@@ -74,21 +74,21 @@ export default async function AccountDashboardPage() {
         </Link>
 
         <Link
-          href="/wishlist"
+          href="/account/details"
           className="rounded-2xl bg-white p-5 shadow-soft hover:shadow-md transition"
         >
-          <Heart className="h-5 w-5 text-gold-500" />
-          <p className="mt-4 font-medium text-ink-700">Wishlistim</p>
-          <p className="text-xs text-ink-400 mt-1">View products you liked</p>
+          <UserCircle className="h-5 w-5 text-gold-500" />
+          <p className="mt-4 font-medium text-ink-700">My Details</p>
+          <p className="text-xs text-ink-400 mt-1">Update your profile</p>
         </Link>
 
         <Link
-          href="/cart"
+          href="/products"
           className="rounded-2xl bg-white p-5 shadow-soft hover:shadow-md transition"
         >
-          <ShoppingBag className="h-5 w-5 text-gold-500" />
-          <p className="mt-4 font-medium text-ink-700">My Cart</p>
-          <p className="text-xs text-ink-400 mt-1">Continue</p>
+          <Gem className="h-5 w-5 text-gold-500" />
+          <p className="mt-4 font-medium text-ink-700">Collection</p>
+          <p className="text-xs text-ink-400 mt-1">Browse products and prices</p>
         </Link>
       </section>
 
@@ -130,7 +130,7 @@ export default async function AccountDashboardPage() {
             <li className="py-8 text-center text-sm text-ink-400">
               You do not have any order requests yet.{" "}
               <Link href="/products" className="text-gold-500 hover:underline">
-                Browse the collection →
+                Browse the collection -&gt;
               </Link>
             </li>
           )}

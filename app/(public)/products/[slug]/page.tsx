@@ -44,7 +44,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const hasPrice = product.price > 0;
   const discount = hasPrice ? discountPercent(product.price, product.old_price) : null;
-  const priceText = hasPrice ? formatPrice(product.price, product.currency) : "price enquiry";
+  const priceText = hasPrice ? formatPrice(product.price, product.currency) : "price details";
   const message = `Hello Michael Jewellery, I would like information about ${product.name} (${priceText}).`;
 
   const { data: relatedRaw } = product.category_id
@@ -96,26 +96,20 @@ export default async function ProductDetailPage({ params }: Props) {
             {product.name}
           </h1>
 
-          <div className="mt-7 flex items-baseline gap-4 border-b border-ink-700/10 pb-7">
-            {hasPrice ? (
-              <>
-                <span className="font-serif text-3xl text-ink-900 md:text-4xl">
-                  {formatPrice(product.price, product.currency)}
-                </span>
-                {product.old_price && (
-                  <span className="text-base text-ink-300 line-through">
-                    {formatPrice(product.old_price, product.currency)}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="font-serif text-3xl text-gold-700 md:text-4xl">
-                Contact for price
+          {hasPrice && (
+            <div className="mt-7 flex items-baseline gap-4 border-b border-ink-700/10 pb-7">
+              <span className="font-serif text-3xl text-ink-900 md:text-4xl">
+                {formatPrice(product.price, product.currency)}
               </span>
-            )}
-          </div>
+              {product.old_price && (
+                <span className="text-base text-ink-300 line-through">
+                  {formatPrice(product.old_price, product.currency)}
+                </span>
+              )}
+            </div>
+          )}
 
-          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-ink-700/10 bg-white/60 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-ink-700">
+          <div className={`${hasPrice ? "mt-5" : "mt-7"} inline-flex items-center gap-2 rounded-full border border-ink-700/10 bg-white/60 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-ink-700`}>
             <span
               className={`h-1.5 w-1.5 rounded-full ${
                 product.stock_status === "available"

@@ -52,7 +52,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <div className="mt-12 rounded-2xl border border-dashed border-ink-200 bg-white p-12 text-center">
           <p className="text-ink-500">No results found for this search.</p>
           <Link href="/products" className="mt-4 inline-block text-gold-500 hover:underline">
-            Browse all products →
+            Browse all products -&gt;
           </Link>
         </div>
       )}

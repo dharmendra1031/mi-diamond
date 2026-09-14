@@ -10,12 +10,14 @@ export function CategoryRow({
   name,
   slug,
   sort_order,
+  description,
   productCount,
 }: {
   id: string;
   name: string;
   slug: string;
   sort_order: number;
+  description: string | null;
   productCount: number;
 }) {
   const [editing, setEditing] = useState(false);
@@ -34,7 +36,8 @@ export function CategoryRow({
       return;
     }
     startTransition(async () => {
-      await deleteCategoryAction(id);
+      const result = await deleteCategoryAction(id);
+      if (result?.error) alert(result.error);
     });
   }
 
@@ -44,7 +47,7 @@ export function CategoryRow({
         <td colSpan={5} className="px-4 py-4 bg-cream/40">
           <div className="max-w-md">
             <CategoryForm
-              category={{ id, name, slug, sort_order, description: null }}
+              category={{ id, name, slug, sort_order, description }}
               onCancel={() => setEditing(false)}
             />
           </div>
@@ -72,7 +75,7 @@ export function CategoryRow({
             onClick={onDelete}
             disabled={pending}
             className="text-ink-400 hover:text-red-500 disabled:opacity-50"
-            aria-label="Sil"
+            aria-label="Delete"
           >
             {pending ? <X className="h-3.5 w-3.5" /> : <Trash2 className="h-3.5 w-3.5" />}
           </button>

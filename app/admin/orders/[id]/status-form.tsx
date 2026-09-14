@@ -11,7 +11,7 @@ const OPTIONS: { value: OrderStatus; label: string }[] = [
   { value: "confirmed", label: "Confirmed" },
   { value: "shipped", label: "Shipped" },
   { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancel Edildi" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 export function OrderStatusForm({
@@ -80,7 +80,7 @@ export function OrderStatusForm({
           </span>
         ) : saved ? (
           <span className="inline-flex items-center gap-2">
-            <Check className="h-4 w-4" /> Kaydedildi
+            <Check className="h-4 w-4" /> Saved
           </span>
         ) : (
           "Update"

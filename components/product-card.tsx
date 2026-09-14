@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
               fill
               quality={95}
               sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover transition duration-700 ease-out group-hover:scale-[1.045]"
+              className="object-contain p-2 transition duration-700 ease-out group-hover:scale-[1.035]"
             />
           ) : (
             <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#efe7d8] to-[#d7c7aa] text-ink-700/25">
@@ -70,24 +70,18 @@ export function ProductCard({ product }: { product: Product }) {
           <h3 className="font-serif text-xl leading-tight text-ink-900 transition group-hover:text-gold-700">
             {product.name}
           </h3>
-          <div className="mt-2 flex items-baseline justify-center gap-2">
-            {hasPrice ? (
-              <>
-                <span className="text-sm font-bold text-ink-900">
-                  {formatPrice(product.price, product.currency)}
-                </span>
-                {product.old_price && (
-                  <span className="text-xs text-ink-300 line-through">
-                    {formatPrice(product.old_price, product.currency)}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-gold-700">
-                Contact for price
+          {hasPrice && (
+            <div className="mt-2 flex items-baseline justify-center gap-2">
+              <span className="text-sm font-bold text-ink-900">
+                {formatPrice(product.price, product.currency)}
               </span>
-            )}
-          </div>
+              {product.old_price && (
+                <span className="text-xs text-ink-300 line-through">
+                  {formatPrice(product.old_price, product.currency)}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </article>

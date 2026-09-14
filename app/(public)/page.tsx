@@ -63,8 +63,8 @@ export default async function HomePage() {
     catalogProducts.find((product) => product.slug === "diamond-drop-necklace-set") ??
     catalogProducts.find((product) => product.slug.includes("necklace")) ??
     catalogProducts[0];
-  const heroVisual = heroProduct ? getDisplayCover(heroProduct) : (showcaseImages[0] ?? homeHero);
-  const heroAccentImages = showcaseImages.filter((image) => image !== heroVisual).slice(0, 2);
+  const fallbackHeroVisual = heroProduct ? getDisplayCover(heroProduct) : showcaseImages[0];
+  const heroVisual = homeHero ?? fallbackHeroVisual;
 
   function categoryCover(categoryId: string) {
     const product = catalogProducts.find(
@@ -75,17 +75,17 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="overflow-hidden border-b border-[#d9b757]/20 bg-[#120b0d] text-white">
-        <div className="grid min-h-[76vh] lg:grid-cols-[0.96fr_1.04fr]">
-          <div className="flex items-center px-5 py-16 sm:px-10 lg:px-[max(3rem,calc((100vw-80rem)/2))] lg:py-24">
+      <section className="overflow-hidden border-b border-[#d9b757]/20 bg-[#140b0e] text-white">
+        <div className="grid lg:min-h-[760px] lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="flex items-center px-5 py-12 sm:px-10 lg:px-[max(3rem,calc((100vw-80rem)/2))] lg:py-24">
             <div className="max-w-xl">
               <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#e8c768]">
-                Fine Jewellery / Hawalli, Kuwait
+                Michael Jewellery Kuwait
               </p>
-              <h1 className="mt-6 max-w-[11ch] font-serif text-[3.2rem] leading-[0.94] text-white sm:max-w-none sm:text-6xl lg:text-7xl">
-                Jewellery made to be <span className="italic text-[#e8c768]">remembered.</span>
+              <h1 className="mt-5 max-w-[10ch] font-serif text-[2.85rem] leading-[0.96] text-white sm:max-w-none sm:text-6xl lg:text-7xl">
+                Fine Gold & Diamond Jewellery.
               </h1>
-              <p className="mt-7 max-w-[32ch] text-sm font-medium leading-7 text-white/85 sm:max-w-lg sm:text-base">
+              <p className="mt-6 max-w-[33ch] text-sm font-medium leading-7 text-white/86 sm:max-w-lg sm:text-base">
                 Discover refined gold and diamond jewellery selected for celebrations,
                 gifting, and everyday elegance at Michael Jewellery Kuwait.
               </p>
@@ -107,7 +107,7 @@ export default async function HomePage() {
                 </a>
               </div>
 
-              <div className="mt-12 grid max-w-lg grid-cols-1 gap-4 border-t border-white/10 pt-6 sm:grid-cols-3 sm:gap-0">
+              <div className="mt-11 hidden max-w-lg grid-cols-3 gap-0 border-t border-white/10 pt-6 sm:grid">
                 {[
                   ["01", "Distinctive designs"],
                   ["02", "Fine presentation"],
@@ -127,55 +127,31 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative min-h-[560px] overflow-hidden bg-[linear-gradient(135deg,#241014_0%,#5a2431_46%,#1a0d10_100%)] lg:min-h-full">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(232,199,104,.24),transparent_22rem),radial-gradient(circle_at_86%_76%,rgba(255,255,255,.12),transparent_24rem)]" />
-
-            <div className="absolute inset-0 grid place-items-center px-5 py-10 sm:px-10 lg:px-12">
-              <div className="relative w-full max-w-[620px]">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-[#d7a52d]/35 bg-[#211014] shadow-[0_34px_100px_rgba(12,6,7,.55)] sm:aspect-[5/6]">
-                  {heroVisual ? (
-                    <Image
-                      src={heroVisual}
-                      alt="Michael Jewellery featured gold and diamond collection"
-                      fill
-                      priority
-                      sizes="(min-width: 1024px) 48vw, 100vw"
-                      className="object-cover"
-                      quality={95}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center font-serif text-6xl text-[#e8c768]/75">MJ</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#120b0d]/72 via-transparent to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/15 bg-[#160d10]/55 p-4 backdrop-blur-md">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#e8c768]">
-                      Featured Jewellery
-                    </p>
-                    <p className="mt-1 font-serif text-2xl text-white sm:text-3xl">Gold & Diamond Selection</p>
-                  </div>
-                </div>
-
-                {logoSrc && (
-                  <div className="absolute -left-4 top-6 hidden h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[#d7a52d]/40 bg-white shadow-2xl sm:flex">
-                    <Image src={logoSrc} alt="Michael Jewellery logo" fill sizes="96px" className="object-contain p-3" />
-                  </div>
-                )}
-
-                {heroAccentImages.length > 0 && (
-                  <div className="absolute -bottom-5 right-4 hidden gap-3 sm:flex">
-                    {heroAccentImages.map((src, index) => (
-                      <div
-                        key={src}
-                        className={`relative h-28 w-24 overflow-hidden rounded-2xl border border-[#d7a52d]/35 bg-[#160d10] shadow-2xl ${index === 1 ? "mt-5" : ""}`}
-                      >
-                        <Image src={src} alt={`Michael Jewellery detail ${index + 1}`} fill sizes="96px" className="object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                )}
+          <div className="relative min-h-[430px] overflow-hidden border-t border-[#d9b757]/20 bg-[#241014] sm:min-h-[560px] lg:min-h-full lg:border-l lg:border-t-0">
+            {heroVisual ? (
+              <Image
+                src={heroVisual}
+                alt="Michael Jewellery fine gold and diamond jewellery"
+                fill
+                priority
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="object-cover object-center"
+                quality={95}
+              />
+            ) : (
+              <div className="flex h-full min-h-[430px] items-center justify-center font-serif text-6xl text-[#e8c768]/75">
+                MJ
               </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#140b0e]/86 via-[#140b0e]/12 to-transparent lg:bg-gradient-to-r lg:from-[#140b0e]/34 lg:via-transparent lg:to-[#140b0e]/18" />
+            <div className="absolute bottom-5 left-4 right-4 rounded-[1.35rem] border border-white/14 bg-[#160d10]/62 p-5 shadow-[0_24px_70px_rgba(14,7,9,.38)] backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-auto sm:max-w-md sm:p-6">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-[#e8c768]">
+                Fine Jewellery
+              </p>
+              <p className="mt-2 max-w-[16rem] font-serif text-xl leading-tight text-white min-[380px]:text-2xl sm:max-w-none sm:text-3xl">
+                Crafted for occasions that stay with you.
+              </p>
             </div>
-
             <Link
               href="/contact"
               className="absolute bottom-6 right-6 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-[#160d10]/45 text-white backdrop-blur transition hover:border-[#d7a52d] hover:bg-[#d7a52d] hover:text-[#160d10]"

@@ -14,14 +14,25 @@ export function discountPercent(price: number, oldPrice: number | null) {
 
 export function slugify(input: string) {
   const map: Record<string, string> = {
-    ç: "c", Ç: "c", ğ: "g", Ğ: "g", ı: "i", İ: "i",
-    ö: "o", Ö: "o", ş: "s", Ş: "s", ü: "u", Ü: "u",
+    ç: "c",
+    Ç: "c",
+    ğ: "g",
+    Ğ: "g",
+    ı: "i",
+    İ: "i",
+    ö: "o",
+    Ö: "o",
+    ş: "s",
+    Ş: "s",
+    ü: "u",
+    Ü: "u",
   };
+
   return input
     .replace(/[çÇğĞıİöÖşŞüÜ]/g, (m) => map[m] ?? m)
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
@@ -37,7 +48,7 @@ export const stockLabel: Record<string, string> = {
 // restore the previous Mi Diamond branding.
 export const siteConfig = {
   name: "Michael Jewellery",
-  tagline: "Fine Jewellery · Kuwait",
+  tagline: "Fine Jewellery - Kuwait",
   whatsapp: "96597850983",
   instagram: "michael.jewellerykwt",
   phone: "+965 2266 1269",

@@ -21,7 +21,7 @@ export default async function AdminCategoriesPage({
     <>
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="font-serif text-3xl text-ink-700">Categoryler</h1>
+          <h1 className="font-serif text-3xl text-ink-700">Categories</h1>
           <p className="mt-1 text-sm text-ink-500">
             Manage product categories on the site.
           </p>
@@ -30,13 +30,13 @@ export default async function AdminCategoriesPage({
 
       {ok && (
         <div className="mt-6 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-          Kaydedildi.
+          Saved.
         </div>
       )}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
-        <div className="rounded-2xl bg-white shadow-soft overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-soft">
+          <table className="min-w-[680px] w-full text-sm">
             <thead className="border-b border-ink-700/10 bg-cream/40 text-left">
               <tr>
                 <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-ink-400">Order</th>
@@ -54,6 +54,7 @@ export default async function AdminCategoriesPage({
                   name={c.name}
                   slug={c.slug}
                   sort_order={c.sort_order}
+                  description={c.description}
                   productCount={c.products?.[0]?.count ?? 0}
                 />
               ))}

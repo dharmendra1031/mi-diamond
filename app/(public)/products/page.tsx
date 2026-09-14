@@ -110,7 +110,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
       <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
         {/* Sidebar filters */}
-        <aside className="space-y-6 lg:sticky lg:top-28 lg:h-fit">
+        <aside className="max-h-[430px] space-y-4 overflow-auto rounded-[1.35rem] border border-white/70 bg-white/45 p-3 shadow-soft backdrop-blur lg:sticky lg:top-28 lg:h-fit lg:max-h-none lg:space-y-6 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <FilterGroup title="Category">
             <ul className="space-y-1.5 text-sm">
               <li>
