@@ -5,7 +5,8 @@ import { discountPercent, formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/supabase/types";
 
 export function ProductCard({ product }: { product: Product }) {
-  const discount = discountPercent(product.price, product.old_price);
+  const hasPrice = product.price > 0;
+  const discount = hasPrice ? discountPercent(product.price, product.old_price) : null;
   const cover = product.images[0];
   const soldOut = product.stock_status === "sold_out";
   const detail = [product.stone, product.metal].filter(Boolean).join(" / ");
@@ -24,7 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#efe7d8] to-[#d7c7aa] text-ink-700/25">
-              <span className="font-serif text-4xl tracking-[0.15em]">MI</span>
+              <span className="font-serif text-4xl tracking-[0.15em]">MJ</span>
             </div>
           )}
 
@@ -68,12 +69,20 @@ export function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
           <div className="mt-2 flex items-baseline justify-center gap-2">
-            <span className="text-sm font-bold text-ink-900">
-              {formatPrice(product.price, product.currency)}
-            </span>
-            {product.old_price && (
-              <span className="text-xs text-ink-300 line-through">
-                {formatPrice(product.old_price, product.currency)}
+            {hasPrice ? (
+              <>
+                <span className="text-sm font-bold text-ink-900">
+                  {formatPrice(product.price, product.currency)}
+                </span>
+                {product.old_price && (
+                  <span className="text-xs text-ink-300 line-through">
+                    {formatPrice(product.old_price, product.currency)}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-gold-700">
+                Contact for price
               </span>
             )}
           </div>
