@@ -1,10 +1,14 @@
 import Image from "next/image";
 import { Diamond, Gem, MapPin, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/lib/format";
+import { getSiteAssetMap } from "@/lib/site-assets";
 
 export const metadata = { title: "About" };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const assets = await getSiteAssetMap(["about_image"]);
+  const aboutImage = assets.about_image;
+
   return (
     <>
       <section className="container-prose py-16 md:py-24">
@@ -37,13 +41,19 @@ export default function AboutPage() {
           </div>
 
           <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-ink-700 shadow-premium">
-            <Image
-              src="/michael-jewellery/michael-jewellery-1.webp"
-              alt="Michael Jewellery collection"
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-            />
+            {aboutImage ? (
+              <Image
+                src={aboutImage}
+                alt="Michael Jewellery collection"
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_70%_25%,#5f2032_0%,#2d1019_35%,#120a0c_78%)] font-serif text-5xl text-gold-200/80">
+                MJ
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">
               <p className="font-serif text-2xl">{siteConfig.name}</p>
