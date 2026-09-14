@@ -63,4 +63,4 @@ jobs:
         if: always()
         run: cat /tmp/michael-jewellery.log || true
 
-# Verification workflow is temporary and will be removed after a green run.
+# Verification rerun after removing legacy cart/wishlist/order runtime dependencies.
