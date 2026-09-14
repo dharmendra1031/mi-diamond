@@ -1,24 +1,35 @@
-# Mi Diamond - Customer Delivery Notes
+# Michael Jewellery Kuwait - Delivery Notes
 
-This file summarizes what the client receives and how the project should be handed over.
+This file summarizes the current client-facing scope and handover status.
 
-## Included Pages
+## Included Public Pages
 
-| Page | URL | Content |
+| Page | URL | Purpose |
 | --- | --- | --- |
-| Home | `/` | Hero, collections, featured products |
-| Collection | `/products` | Filtered product list |
-| Product Detail | `/products/[slug]` | Gallery, price, details, add to cart |
-| About | `/about` | Brand story |
-| Contact | `/contact` | Phone, email, address, WhatsApp, Instagram |
-| FAQ | `/faq` | Frequently asked questions |
-| Shipping & Returns | `/shipping-returns` | Policies |
-| Privacy | `/privacy` | Privacy policy |
-| Cart | `/cart` | Customer cart |
-| Wishlist | `/wishlist` | Wishlist |
-| Order Request | `/order` | Request form without online payment |
-| Search | `/search?q=...` | Product search |
-| Admin | `/admin` | Protected admin panel |
+| Home | `/` | Premium Michael Jewellery branding, collections, editorial showcase |
+| Collection | `/products` | Product catalogue with filters |
+| Product Detail | `/products/[slug]` | Gallery, KWD price, details, availability, WhatsApp / phone enquiry |
+| Search | `/search?q=...` | Catalogue search |
+| About | `/about` | Michael Jewellery brand/store introduction |
+| Contact | `/contact` | Hawalli address, phone, WhatsApp, Instagram |
+| Privacy | `/privacy` | Catalogue-focused privacy information |
+| Admin Login | `/admin/login` | Protected catalogue administration |
+| Admin | `/admin` | Product/category management dashboard |
+
+## Disabled Legacy Flows
+
+The following older e-commerce/customer flows are intentionally disabled and redirect away from their old pages:
+
+- Customer login / registration
+- Customer account
+- Cart
+- Wishlist
+- Checkout / order request
+- Shipping & returns selling flow
+- Selling/order FAQ flow
+- Admin order-management route
+
+This matches the Michael Jewellery requirement: the website is a **catalogue and branding website**, not an online selling platform.
 
 ## What The Client Can Manage
 
@@ -27,62 +38,77 @@ From the admin panel, the client can:
 - Add, edit, and delete products
 - Upload multiple product photos
 - Choose the cover image
-- Update prices and discounts
-- Manage stock status: In Stock, Sold Out, Made to Order
+- Add product descriptions
+- Enter KWD prices and optional old prices
+- Set stock status: In Stock, Sold Out, Made to Order
+- Publish/unpublish products
+- Mark selected products as Featured
 - Add and edit categories
-- View incoming order requests
-- Contact customers by phone or WhatsApp
-- Update order request status
+- Add material, stone, carat, and ring-size details where relevant
 
-## Order Flow Without Online Payment
+## Current Michael Jewellery Details
 
-1. Customer adds products to the cart.
-2. Customer clicks **Create Order Request**.
-3. Customer fills out the contact and delivery form.
-4. The request appears in the admin panel.
-5. The business contacts the customer by phone or WhatsApp.
-6. Product and payment details are confirmed.
-7. Payment is collected by bank transfer, payment link, or in-store cash/card.
-8. The request is marked as **Completed**.
+- **Brand:** Michael Jewellery
+- **Address:** Hawalli, Ibn Khaldoon St., Al-Haddad Complex, Shop 3, Kuwait
+- **Phone:** +965 2266 1269
+- **Mobile / WhatsApp:** +965 9785 0983
+- **Instagram:** @michael.jewellerykwt
+- **Currency:** KWD
 
-## Fixed Annual Costs
+## Current Database State
 
-| Item | Estimated Cost | Notes |
-| --- | ---: | --- |
-| Domain | ~250 TL/year | Depends on registrar |
-| Vercel | 0 TL | Hobby tier |
-| Supabase | 0 TL | Free tier |
-| Image Storage | 0 TL | Included in Supabase free tier |
-| Total | ~250 TL/year | Traffic growth may require paid plans |
+- Supabase catalogue schema is active
+- Product price default is KWD
+- Product image bucket is public for catalogue display
+- Product/category writes are admin-only through RLS
+- Draft/unpublished products are visible to admins
+- Public visitors see only published products
+- Legacy anonymous order/newsletter writes are disabled
+- Michael Jewellery categories are seeded
+- Old Mi Diamond demo/test products were removed
 
-## Future Payment Integration
+## Image Quality Guidance
 
-The project is ready for online payment integration. To activate it:
+The supplied social-media screenshots are relatively small, so the website uses them only in controlled-size editorial cards instead of stretching them into a full-screen hero.
 
-- Choose iyzico, PayTR, Stripe, or another provider
-- Add a payment step after the cart/request form
-- Add payment initiation and callback route handlers
-- Mark successful records with `payment_status = paid`
+The main hero uses the supplied Michael Jewellery logo with a high-quality burgundy/gold layout.
 
-Estimated work: 15-20 development hours.
+For real catalogue products, upload the best original photography available. Recommended target:
 
-## Content Needed Before Launch
+- Portrait orientation where possible
+- Around **1600 × 2000 px or larger**
+- Clean JPG/WebP/PNG
+- Avoid WhatsApp-compressed screenshots when original photos are available
 
-- Logo files (`.svg` and `.png`)
-- High-resolution product photos
-- Product names, descriptions, and prices
-- WhatsApp number
-- Instagram username
-- Full address
-- Final About text
-- Optional banner images
+## Content Still Needed For Real Product Catalogue
 
-## Support Notes
+The admin catalogue is ready, but real product entries require the actual business data for each piece:
 
-The first support period should include:
+- Product name
+- Category
+- Description
+- KWD price
+- Availability
+- Original high-resolution photos
+- Optional material / stone / carat details
 
-- Small UI adjustments
-- Admin panel training
-- Content entry guidance
+No fake prices or invented product specifications should be added.
 
-An ongoing monthly maintenance agreement can be added later.
+## Verification Commands
+
+```bash
+npm ci
+npm run lint
+npm run build
+npm start
+```
+
+## Support / Handover
+
+The first handover should include:
+
+- Admin login demonstration
+- How to add/edit categories
+- How to upload high-resolution product images
+- How to publish/unpublish a product
+- How Featured products affect the catalogue/homepage
