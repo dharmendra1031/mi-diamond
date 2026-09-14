@@ -31,6 +31,9 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
+      - name: Production dependency audit
+        continue-on-error: true
+        run: npm audit --omit=dev
       - name: Start production server
         run: |
           npm start > /tmp/michael-jewellery.log 2>&1 &
