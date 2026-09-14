@@ -62,3 +62,5 @@ jobs:
       - name: Print server log
         if: always()
         run: cat /tmp/michael-jewellery.log || true
+
+# Verification workflow is temporary and will be removed after a green run.
