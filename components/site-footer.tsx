@@ -10,8 +10,7 @@ import {
 } from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 import { getCurrentProfile } from "@/lib/supabase/auth";
-
-const logoSrc = "/michael-jewellery/michael-jewellery-logo.webp";
+import { getSiteAssetMap } from "@/lib/site-assets";
 
 export async function SiteFooter() {
   let isAdmin = false;
@@ -22,6 +21,9 @@ export async function SiteFooter() {
     // Render an anonymous footer when Supabase env vars are missing.
   }
 
+  const assets = await getSiteAssetMap(["logo"]);
+  const logoSrc = assets.logo;
+
   return (
     <footer
       className="mt-28 border-t border-[#d7a52d]/25 text-white"
@@ -31,14 +33,18 @@ export async function SiteFooter() {
         <div className="grid gap-12 lg:grid-cols-[1.35fr_.65fr_.9fr]">
           <div>
             <div className="flex items-center gap-4">
-              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-[#d7a52d]/60">
-                <Image
-                  src={logoSrc}
-                  alt="Michael Jewellery logo"
-                  fill
-                  sizes="56px"
-                  className="object-contain"
-                />
+              <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white font-serif text-sm text-ink-700 ring-1 ring-[#d7a52d]/60">
+                {logoSrc ? (
+                  <Image
+                    src={logoSrc}
+                    alt="Michael Jewellery logo"
+                    fill
+                    sizes="56px"
+                    className="object-contain"
+                  />
+                ) : (
+                  <span>MJ</span>
+                )}
               </span>
               <div>
                 <span className="block font-serif text-2xl tracking-[0.06em]">
