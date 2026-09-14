@@ -24,12 +24,13 @@ export function ProductGallery({
             alt={name}
             fill
             priority
+            quality={95}
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="font-serif text-5xl text-ink-200">Mi</span>
+            <span className="font-serif text-5xl text-ink-200">MJ</span>
           </div>
         )}
         {discount && (
@@ -53,6 +54,7 @@ export function ProductGallery({
                 src={src}
                 alt={`${name} - ${i + 1}`}
                 fill
+                quality={90}
                 sizes="(min-width: 1024px) 10vw, 20vw"
                 className="object-cover"
               />
