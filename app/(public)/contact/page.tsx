@@ -1,4 +1,11 @@
-import { Mail, MapPin, Phone, Instagram, MessageCircle } from "lucide-react";
+import {
+  Instagram,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Store,
+} from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 
 export const metadata = { title: "Contact" };
@@ -6,84 +13,92 @@ export const metadata = { title: "Contact" };
 export default function ContactPage() {
   return (
     <section className="container-prose py-16 md:py-24">
-      <p className="label-eyebrow">Contact</p>
-      <h1 className="mt-3 font-serif text-4xl md:text-5xl text-ink-700">
-        Get in touch
+      <p className="label-eyebrow">Michael Jewellery Kuwait</p>
+      <h1 className="mt-3 font-serif text-4xl text-ink-700 md:text-5xl">
+        Visit our showroom
       </h1>
-      <p className="mt-4 max-w-xl text-ink-500">
-        For the design you have in mind, a custom order, or anything you are curious about,
-        you can contact us every day.
+      <p className="mt-4 max-w-2xl text-ink-500">
+        Explore our jewellery collection in Hawalli or contact us directly for product details and availability.
       </p>
 
-      <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow-soft">
-          <Phone className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
-          <h3 className="mt-4 font-serif text-xl text-ink-700">Phone</h3>
+      <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ContactCard icon={Phone} title="Landline">
           <a
             href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
-            className="mt-2 block text-ink-500 hover:text-gold-500"
+            className="text-ink-500 transition hover:text-gold-600"
           >
             {siteConfig.phone}
           </a>
-        </div>
+        </ContactCard>
 
-        <div className="rounded-2xl bg-white p-6 shadow-soft">
-          <Mail className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
-          <h3 className="mt-4 font-serif text-xl text-ink-700">Email</h3>
+        <ContactCard icon={MessageCircle} title="Mobile & WhatsApp">
           <a
-            href={`mailto:${siteConfig.email}`}
-            className="mt-2 block text-ink-500 hover:text-gold-500"
-          >
-            {siteConfig.email}
-          </a>
-        </div>
-
-        <div className="rounded-2xl bg-white p-6 shadow-soft">
-          <MapPin className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
-          <h3 className="mt-4 font-serif text-xl text-ink-700">Adres</h3>
-          <p className="mt-2 text-ink-500">{siteConfig.address}</p>
-        </div>
-
-        <div className="rounded-2xl bg-white p-6 shadow-soft">
-          <MessageCircle className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
-          <h3 className="mt-4 font-serif text-xl text-ink-700">WhatsApp</h3>
-          <a
-            href={whatsappUrl()}
+            href={whatsappUrl("Hello Michael Jewellery, I would like to enquire about your collection.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 block text-ink-500 hover:text-gold-500"
+            className="text-ink-500 transition hover:text-gold-600"
           >
-            Message us for a quick reply
+            {siteConfig.mobile}
           </a>
-        </div>
+        </ContactCard>
 
-        <div className="rounded-2xl bg-white p-6 shadow-soft">
-          <Instagram className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
-          <h3 className="mt-4 font-serif text-xl text-ink-700">Instagram</h3>
+        <ContactCard icon={Instagram} title="Instagram">
           <a
             href={`https://instagram.com/${siteConfig.instagram}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 block text-ink-500 hover:text-gold-500"
+            className="break-all text-ink-500 transition hover:text-gold-600"
           >
             @{siteConfig.instagram}
           </a>
+        </ContactCard>
+
+        <div className="rounded-2xl bg-white p-6 shadow-soft md:col-span-2">
+          <MapPin className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
+          <h2 className="mt-4 font-serif text-xl text-ink-700">Showroom Address</h2>
+          <p className="mt-2 max-w-xl leading-7 text-ink-500">{siteConfig.address}</p>
         </div>
 
-        <div className="rounded-2xl bg-ink-700 p-6 text-cream">
-          <h3 className="font-serif text-xl">Working Hours</h3>
-          <ul className="mt-4 space-y-1 text-sm text-cream/80">
-            <li className="flex justify-between">
-              <span>Pazartesi – Cumartesi</span>
-              <span>10:00 – 19:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span>Pazar</span>
-              <span>Closed</span>
-            </li>
-          </ul>
-        </div>
+        {siteConfig.email ? (
+          <ContactCard icon={Mail} title="Email">
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="break-all text-ink-500 transition hover:text-gold-600"
+            >
+              {siteConfig.email}
+            </a>
+          </ContactCard>
+        ) : (
+          <div
+            className="rounded-2xl p-6 text-white shadow-soft"
+            style={{ background: "linear-gradient(135deg,#180c10 0%,#3a1020 100%)" }}
+          >
+            <Store className="h-6 w-6 text-[#e8c768]" strokeWidth={1.4} />
+            <h2 className="mt-4 font-serif text-xl">In-store consultation</h2>
+            <p className="mt-2 text-sm leading-6 text-white/70">
+              Visit Shop 3 at Al-Haddad Complex to view the collection in person.
+            </p>
+          </div>
+        )}
       </div>
     </section>
+  );
+}
+
+function ContactCard({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Phone;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl bg-white p-6 shadow-soft">
+      <Icon className="h-6 w-6 text-gold-500" strokeWidth={1.4} />
+      <h2 className="mt-4 font-serif text-xl text-ink-700">{title}</h2>
+      <div className="mt-2">{children}</div>
+    </div>
   );
 }
