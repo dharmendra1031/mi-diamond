@@ -1,11 +1,28 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { LayoutGrid, Package, Tags, LogOut, Diamond, ExternalLink, ShoppingBag } from "lucide-react";
+import {
+  LayoutGrid,
+  Package,
+  Tags,
+  LogOut,
+  Diamond,
+  ExternalLink,
+  Star,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/format";
 import { signOutAction } from "./actions";
 
 export const metadata = { title: "Admin" };
+
+function BrandMark() {
+  return (
+    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-400/60 bg-gold-400/10">
+      <Star className="absolute top-1 h-2 w-2 fill-gold-400 text-gold-400" strokeWidth={1} />
+      <Diamond className="mt-1.5 h-4 w-4 text-gold-400" strokeWidth={1.2} />
+    </span>
+  );
+}
 
 export default async function AdminLayout({
   children,
@@ -25,27 +42,30 @@ export default async function AdminLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const nav = [
+    { href: "/admin", label: "Dashboard", icon: LayoutGrid },
+    { href: "/admin/products", label: "Products", icon: Package },
+    { href: "/admin/categories", label: "Categories", icon: Tags },
+  ];
+
   return (
     <div className="min-h-screen bg-cream">
       <div className="flex min-h-screen">
-        <aside className="hidden md:flex w-64 flex-col border-r border-ink-700/10 bg-white">
+        <aside className="hidden w-64 flex-col border-r border-ink-700/10 bg-white md:flex">
           <div className="border-b border-ink-700/10 p-6">
-            <Link href="/admin" className="flex items-center gap-2 text-ink-700">
-              <Diamond className="h-6 w-6 text-gold-400" strokeWidth={1.5} />
-              <span className="font-serif text-xl">{siteConfig.name}</span>
+            <Link href="/admin" className="flex items-center gap-3 text-ink-700">
+              <BrandMark />
+              <span>
+                <span className="block font-serif text-lg leading-none">{siteConfig.name}</span>
+                <span className="mt-1 block text-[9px] uppercase tracking-[0.2em] text-ink-400">
+                  Catalogue Admin
+                </span>
+              </span>
             </Link>
-            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-ink-400">
-              Admin Panel
-            </p>
           </div>
 
           <nav className="flex-1 space-y-1 p-4">
-            {[
-              { href: "/admin", label: "Dashboard", icon: LayoutGrid },
-              { href: "/admin/products", label: "Products", icon: Package },
-              { href: "/admin/categories", label: "Categoryler", icon: Tags },
-              { href: "/admin/orders", label: "Talepler", icon: ShoppingBag },
-            ].map((item) => (
+            {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -57,14 +77,14 @@ export default async function AdminLayout({
             ))}
           </nav>
 
-          <div className="border-t border-ink-700/10 p-4 space-y-2">
+          <div className="space-y-2 border-t border-ink-700/10 p-4">
             <Link
               href="/"
               target="_blank"
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-ink-400 hover:text-ink-700"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              View site
+              View website
             </Link>
             {user && (
               <div className="px-3 py-2">
@@ -84,35 +104,26 @@ export default async function AdminLayout({
         </aside>
 
         <div className="flex-1 overflow-x-hidden">
-          {/* Mobile top bar */}
-          <header className="md:hidden flex items-center justify-between border-b border-ink-700/10 bg-white px-4 py-3">
+          <header className="flex items-center justify-between border-b border-ink-700/10 bg-white px-4 py-3 md:hidden">
             <Link href="/admin" className="flex items-center gap-2 text-ink-700">
-              <Diamond className="h-5 w-5 text-gold-400" strokeWidth={1.5} />
-              <span className="font-serif text-lg">{siteConfig.name}</span>
+              <BrandMark />
+              <span className="font-serif text-base">{siteConfig.name}</span>
             </Link>
             <form action={signOutAction}>
-              <button
-                type="submit"
-                className="text-xs text-ink-500"
-                aria-label="Sign out"
-              >
+              <button type="submit" className="text-ink-500" aria-label="Sign out">
                 <LogOut className="h-4 w-4" />
               </button>
             </form>
           </header>
-          <nav className="md:hidden flex border-b border-ink-700/10 bg-white text-xs">
-            {[
-              { href: "/admin", label: "Dashboard" },
-              { href: "/admin/products", label: "Products" },
-              { href: "/admin/categories", label: "Category" },
-              { href: "/admin/orders", label: "Talepler" },
-            ].map((i) => (
+
+          <nav className="flex border-b border-ink-700/10 bg-white text-xs md:hidden">
+            {nav.map((item) => (
               <Link
-                key={i.href}
-                href={i.href}
+                key={item.href}
+                href={item.href}
                 className="flex-1 px-3 py-3 text-center text-ink-500"
               >
-                {i.label}
+                {item.label}
               </Link>
             ))}
           </nav>
