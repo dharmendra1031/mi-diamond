@@ -1,8 +1,9 @@
-export function formatPrice(amount: number, currency = "TRY") {
-  return new Intl.NumberFormat("tr-TR", {
+export function formatPrice(amount: number, currency = "KWD") {
+  return new Intl.NumberFormat("en-KW", {
     style: "currency",
     currency,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
   }).format(amount);
 }
 
@@ -26,18 +27,22 @@ export function slugify(input: string) {
 }
 
 export const stockLabel: Record<string, string> = {
-  available: "In Stock",
+  available: "Available",
   sold_out: "Sold Out",
-  on_request: "Made to Order",
+  on_request: "On Request",
 };
 
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Mi Diamond",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "905551234567",
-  instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "midiamond",
-  phone: process.env.NEXT_PUBLIC_PHONE ?? "+90 555 123 45 67",
-  email: process.env.NEXT_PUBLIC_EMAIL ?? "info@midiamond.com.tr",
-  address: process.env.NEXT_PUBLIC_ADDRESS ?? "Istanbul, Turkey",
+  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Michael Jewellery",
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE ?? "Fine Jewellery · Kuwait",
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "96597850983",
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "michael.jewellerykwt",
+  phone: process.env.NEXT_PUBLIC_PHONE ?? "+965 2266 1269",
+  mobile: process.env.NEXT_PUBLIC_MOBILE ?? "+965 9785 0983",
+  email: process.env.NEXT_PUBLIC_EMAIL ?? "",
+  address:
+    process.env.NEXT_PUBLIC_ADDRESS ??
+    "Hawalli, Ibn Khaldoon St., Al-Haddad Complex, Shop 3, Kuwait",
 };
 
 export function whatsappUrl(message?: string) {
