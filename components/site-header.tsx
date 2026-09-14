@@ -1,11 +1,7 @@
 import Link from "next/link";
-import { Diamond } from "lucide-react";
-import { siteConfig } from "@/lib/format";
-import { CartIcon } from "./cart/cart-icon";
-import { WishlistIcon } from "./cart/wishlist-icon";
-import { UserMenu } from "./user-menu";
+import { Diamond, MessageCircle } from "lucide-react";
+import { siteConfig, whatsappUrl } from "@/lib/format";
 import { HeaderNav } from "./header-nav";
-import { getCurrentProfile } from "@/lib/supabase/auth";
 
 const nav = [
   { href: "/", label: "Anasayfa" },
@@ -14,43 +10,39 @@ const nav = [
   { href: "/iletisim", label: "İletişim" },
 ];
 
-export async function SiteHeader() {
-  let loggedIn = false;
-  let fullName: string | null = null;
-  let email: string | null = null;
-  let isAdmin = false;
-  try {
-    const { user, profile } = await getCurrentProfile();
-    loggedIn = !!user;
-    email = user?.email ?? null;
-    fullName = profile?.full_name ?? null;
-    isAdmin = profile?.is_admin ?? false;
-  } catch {
-    // env eksikse anonim render
-  }
-
+export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-700/10 bg-cream/80 backdrop-blur-md">
-      <div className="container-prose flex h-20 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 text-ink-700 shrink-0">
-          <Diamond className="h-6 w-6 text-gold-400" strokeWidth={1.5} />
-          <span className="font-serif text-2xl tracking-wide">
-            {siteConfig.name}
+    <header className="sticky top-0 z-40 border-b border-ink-700/10 bg-cream/95 backdrop-blur-xl">
+      <div className="border-b border-cream/10 bg-ink-900 px-4 py-2 text-center text-[10px] font-medium uppercase tracking-[0.24em] text-cream/80">
+        Zamansız tasarımlar · Seçkin işçilik · Kişiye özel danışmanlık
+      </div>
+
+      <div className="container-prose flex h-[76px] items-center justify-between gap-4">
+        <Link href="/" className="group flex shrink-0 items-center gap-3 text-ink-700">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-gold-400/50 transition group-hover:border-gold-400">
+            <Diamond className="h-4 w-4 text-gold-400" strokeWidth={1.25} />
+          </span>
+          <span>
+            <span className="block font-serif text-[23px] leading-none tracking-[0.08em]">
+              {siteConfig.name}
+            </span>
+            <span className="mt-1 block text-[8px] uppercase tracking-[0.34em] text-ink-400">
+              Fine Jewellery
+            </span>
           </span>
         </Link>
 
         <HeaderNav nav={nav} />
 
-        <div className="flex items-center gap-1">
-          <WishlistIcon />
-          <CartIcon />
-          <UserMenu
-            loggedIn={loggedIn}
-            fullName={fullName}
-            email={email}
-            isAdmin={isAdmin}
-          />
-        </div>
+        <a
+          href={whatsappUrl("Merhaba, koleksiyonunuz hakkında bilgi almak istiyorum.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden items-center gap-2 border border-ink-700/20 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-700 transition hover:border-ink-700 hover:bg-ink-700 hover:text-cream md:inline-flex"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Danışmanlık
+        </a>
       </div>
     </header>
   );
