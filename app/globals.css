@@ -19,19 +19,24 @@
   h1, h2, h3, h4 {
     @apply font-serif tracking-tight;
   }
+
+  ::selection {
+    background: rgba(201, 162, 74, 0.28);
+    color: #0b1a2f;
+  }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink-700 px-6 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 hover:shadow-soft;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-ink-800 bg-ink-800 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-cream transition hover:bg-transparent hover:text-ink-800;
   }
 
   .btn-gold {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold-400 px-6 py-3 text-sm font-medium text-ink-700 transition hover:bg-gold-300 hover:shadow-gold;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-gold-400 bg-gold-400 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-800 transition hover:bg-transparent hover:text-gold-500;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink-700/20 px-6 py-3 text-sm font-medium text-ink-700 transition hover:border-ink-700 hover:bg-ink-700 hover:text-cream;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-ink-700/25 bg-transparent px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-700 transition hover:border-ink-800 hover:bg-ink-800 hover:text-cream;
   }
 
   .container-prose {
@@ -39,6 +44,6 @@
   }
 
   .label-eyebrow {
-    @apply text-xs font-medium uppercase tracking-[0.2em] text-gold-500;
+    @apply text-[10px] font-medium uppercase tracking-[0.24em] text-gold-600;
   }
 }
