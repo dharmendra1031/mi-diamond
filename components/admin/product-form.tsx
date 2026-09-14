@@ -13,24 +13,24 @@ import {
 import type { Category, Product } from "@/lib/supabase/types";
 
 const METAL_OPTIONS = [
-  "14 Ayar Beyaz Altın",
-  "14 Ayar Sarı Altın",
-  "14 Ayar Rose Altın",
-  "18 Ayar Beyaz Altın",
-  "18 Ayar Sarı Altın",
-  "18 Ayar Rose Altın",
-  "925 Gümüş",
+  "14 K White Gold",
+  "14 K Yellow Gold",
+  "14 K Rose Gold",
+  "18 K White Gold",
+  "18 K Yellow Gold",
+  "18 K Rose Gold",
+  "925 Silver",
   "Platin",
 ];
 
 const STONE_OPTIONS = [
-  "Pırlanta",
+  "Diamond",
   "Zirkon",
   "Yakut",
-  "Zümrüt",
+  "Emerald",
   "Safir",
-  "İnci",
-  "Tek Taş",
+  "Pearl",
+  "Tek Stone",
 ];
 
 export function ProductForm({
@@ -68,8 +68,8 @@ export function ProductForm({
     } catch (e) {
       setError(
         e instanceof Error
-          ? `Yükleme başarısız: ${e.message}`
-          : "Yükleme başarısız.",
+          ? `Upload failed: ${e.message}`
+          : "Upload failed.",
       );
     } finally {
       setUploading(false);
@@ -107,7 +107,7 @@ export function ProductForm({
 
   function onDelete() {
     if (!product) return;
-    if (!confirm(`"${product.name}" ürünü silinsin mi?`)) return;
+    if (!confirm(`"${product.name}" product be deleted?`)) return;
     startTransition(async () => {
       await deleteProductAction(product.id);
     });
@@ -117,20 +117,20 @@ export function ProductForm({
     <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
         <Section title="Temel Bilgiler">
-          <Field label="Ürün Adı *" name="name" defaultValue={product?.name} required />
+          <Field label="Product Name *" name="name" defaultValue={product?.name} required />
           <Field
-            label="Açıklama"
+            label="Description"
             name="description"
             defaultValue={product?.description ?? ""}
             multiline
           />
           <div className="grid sm:grid-cols-2 gap-4">
             <SelectField
-              label="Kategori"
+              label="Category"
               name="category_id"
               defaultValue={product?.category_id ?? ""}
             >
-              <option value="">Seçiniz</option>
+              <option value="">Select</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -138,21 +138,21 @@ export function ProductForm({
               ))}
             </SelectField>
             <SelectField
-              label="Stok Durumu"
+              label="Stok Statusu"
               name="stock_status"
               defaultValue={product?.stock_status ?? "available"}
             >
-              <option value="available">Stokta</option>
-              <option value="on_request">Siparişe Özel</option>
-              <option value="sold_out">Tükendi</option>
+              <option value="available">In Stock</option>
+              <option value="on_request">Made to Order</option>
+              <option value="sold_out">Sold Out</option>
             </SelectField>
           </div>
         </Section>
 
-        <Section title="Fiyat & İndirim">
+        <Section title="Price & Discount">
           <div className="grid sm:grid-cols-2 gap-4">
             <Field
-              label="Satış Fiyatı (TL) *"
+              label="Sale Price (TL) *"
               name="price"
               type="number"
               step="0.01"
@@ -160,17 +160,17 @@ export function ProductForm({
               required
             />
             <Field
-              label="Eski Fiyat (TL) — indirim için"
+              label="Old Price (TL) - for discount"
               name="old_price"
               type="number"
               step="0.01"
               defaultValue={product?.old_price ?? ""}
-              hint="Boş bırakılırsa indirim gösterilmez. İndirim oranı otomatik hesaplanır."
+              hint="If left blank, no discount is shown. The discount rate is calculated automatically."
             />
           </div>
         </Section>
 
-        <Section title="Ürün Özellikleri">
+        <Section title="Product Details">
           <div className="grid sm:grid-cols-2 gap-4">
             <ComboField
               label="Metal"
@@ -179,7 +179,7 @@ export function ProductForm({
               options={METAL_OPTIONS}
             />
             <ComboField
-              label="Taş"
+              label="Stone"
               name="stone"
               defaultValue={product?.stone ?? ""}
               options={STONE_OPTIONS}
@@ -191,7 +191,7 @@ export function ProductForm({
               placeholder="0.25 ct"
             />
             <Field
-              label="Yüzük Ölçüsü"
+              label="Ring Size"
               name="ring_size"
               defaultValue={product?.ring_size ?? ""}
               placeholder="13–18 / Ayarlanabilir"
@@ -199,7 +199,7 @@ export function ProductForm({
           </div>
         </Section>
 
-        <Section title="Görseller">
+        <Section title="Images">
           <div className="rounded-xl border-2 border-dashed border-ink-200 bg-cream/40 p-6 text-center">
             <input
               type="file"
@@ -219,16 +219,16 @@ export function ProductForm({
             >
               {uploading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Yükleniyor...
+                  <Loader2 className="h-4 w-4 animate-spin" /> Uploading...
                 </>
               ) : (
                 <>
-                  <Upload className="h-4 w-4" /> Fotoğraf Yükle
+                  <Upload className="h-4 w-4" /> Upload Photo
                 </>
               )}
             </label>
             <p className="mt-2 text-xs text-ink-400">
-              Birden fazla seçebilirsiniz. İlk fotoğraf kapak olur.
+              You can select multiple images. The first image becomes the cover.
             </p>
           </div>
 
@@ -241,7 +241,7 @@ export function ProductForm({
                 >
                   <Image
                     src={url}
-                    alt={`Görsel ${idx + 1}`}
+                    alt={`Image ${idx + 1}`}
                     fill
                     sizes="120px"
                     className="object-cover"
@@ -256,7 +256,7 @@ export function ProductForm({
                       type="button"
                       onClick={() => moveImage(idx, idx - 1)}
                       className="text-white/80 hover:text-white text-xs"
-                      aria-label="Yukarı taşı"
+                      aria-label="Move up"
                     >
                       <GripVertical className="h-3.5 w-3.5 -rotate-90" />
                     </button>
@@ -283,17 +283,17 @@ export function ProductForm({
       </div>
 
       <aside className="space-y-6 lg:sticky lg:top-10 lg:h-fit">
-        <Section title="Yayın">
+        <Section title="Publishing">
           <Toggle
             name="is_published"
-            label="Yayında"
-            description="Sitede görünür."
+            label="Publishingda"
+            description="Visible on the site."
             defaultChecked={product?.is_published ?? true}
           />
           <Toggle
             name="is_featured"
-            label="Öne Çıkan"
-            description="Anasayfada gösterilir."
+            label="Featured"
+            description="Shown on the homepage."
             defaultChecked={product?.is_featured ?? false}
           />
         </Section>
@@ -306,12 +306,12 @@ export function ProductForm({
           >
             {pending ? (
               <span className="inline-flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" /> Kaydediliyor...
+                <Loader2 className="h-4 w-4 animate-spin" /> Saving...
               </span>
             ) : product ? (
-              "Değişiklikleri Kaydet"
+              "Save Changes"
             ) : (
-              "Ürünü Ekle"
+              "Add Product"
             )}
           </button>
 
@@ -320,7 +320,7 @@ export function ProductForm({
             onClick={() => router.back()}
             className="w-full rounded-full border border-ink-200 bg-white py-3 text-sm text-ink-500 hover:text-ink-700"
           >
-            İptal
+            Cancel
           </button>
 
           {product && (
@@ -329,7 +329,7 @@ export function ProductForm({
               onClick={onDelete}
               className="w-full text-xs text-red-500 hover:underline"
             >
-              Bu ürünü sil
+              Delete this product
             </button>
           )}
         </div>

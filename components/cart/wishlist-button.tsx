@@ -32,7 +32,7 @@ export function WishlistButton({
         <Heart
           className={`h-4 w-4 ${active ? "fill-current text-red-500" : ""}`}
         />
-        {active ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+        {active ? "Remove from Wishlist" : "Add to Wishlist"}
       </button>
     );
   }
@@ -40,7 +40,7 @@ export function WishlistButton({
   return (
     <button
       onClick={onClick}
-      aria-label={active ? "Favorilerden çıkar" : "Favorilere ekle"}
+      aria-label={active ? "Remove from wishlist" : "Add to wishlist"}
       className="flex h-9 w-9 items-center justify-center rounded-full bg-cream/90 backdrop-blur transition hover:bg-cream"
     >
       <Heart

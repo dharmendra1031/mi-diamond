@@ -26,7 +26,7 @@ export function LoginForm({ next }: { next?: string }) {
     });
 
     if (authError) {
-      setError("E-posta veya şifre hatalı.");
+      setError("Email or password is incorrect.");
       setLoading(false);
       return;
     }
@@ -39,7 +39,7 @@ export function LoginForm({ next }: { next?: string }) {
     <form onSubmit={onSubmit} className="mt-6 space-y-4">
       <div>
         <label htmlFor="email" className="text-sm font-medium text-ink-700">
-          E-posta
+          Email
         </label>
         <input
           id="email"
@@ -53,7 +53,7 @@ export function LoginForm({ next }: { next?: string }) {
 
       <div>
         <label htmlFor="password" className="text-sm font-medium text-ink-700">
-          Şifre
+          Password
         </label>
         <input
           id="password"
@@ -78,10 +78,10 @@ export function LoginForm({ next }: { next?: string }) {
       >
         {loading ? (
           <span className="inline-flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" /> Giriş yapılıyor...
+            <Loader2 className="h-4 w-4 animate-spin" /> Signing in...
           </span>
         ) : (
-          "Giriş Yap"
+          "Sign In"
         )}
       </button>
     </form>

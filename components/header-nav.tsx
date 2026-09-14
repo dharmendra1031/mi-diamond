@@ -16,7 +16,7 @@ export function HeaderNav({ nav }: { nav: NavItem[] }) {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim()) return;
-    router.push(`/arama?q=${encodeURIComponent(query.trim())}`);
+    router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     setOpen(false);
     setQuery("");
   }
@@ -35,8 +35,8 @@ export function HeaderNav({ nav }: { nav: NavItem[] }) {
               href={item.href}
               className={`text-sm tracking-wide transition ${
                 active
-                  ? "text-ink-700 font-medium"
-                  : "text-ink-500 hover:text-ink-700"
+                  ? "font-semibold text-gold-100"
+                  : "font-medium text-cream/85 hover:text-white"
               }`}
             >
               {item.label}
@@ -50,36 +50,36 @@ export function HeaderNav({ nav }: { nav: NavItem[] }) {
         className="hidden md:flex flex-1 max-w-xs lg:max-w-sm mx-auto"
       >
         <div className="relative w-full">
-          <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gold-300/80" />
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ürün ara..."
-            className="w-full rounded-full border border-ink-200 bg-white py-2.5 pl-11 pr-4 text-sm text-ink-700 placeholder:text-ink-400 transition focus:border-gold-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-gold-400/20"
+            placeholder="Search products..."
+            className="w-full rounded-full border border-white/20 bg-white/12 py-2.5 pl-11 pr-4 text-sm font-medium text-white placeholder:text-cream/65 transition focus:border-gold-300/80 focus:bg-white/18 focus:outline-none focus:ring-2 focus:ring-gold-400/20"
           />
         </div>
       </form>
 
       <button
-        className="md:hidden ml-1 text-ink-700"
+        className="ml-1 text-cream md:hidden"
         onClick={() => setOpen(!open)}
-        aria-label="Menü"
+        aria-label="Menu"
       >
         {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full md:hidden border-t border-ink-700/10 bg-cream shadow-soft">
+        <div className="absolute inset-x-0 top-full border-t border-white/10 bg-ink-700/96 shadow-soft backdrop-blur-xl md:hidden">
           <div className="container-prose py-3">
             <form onSubmit={onSubmit} className="relative">
-              <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gold-300/80" />
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Ürün ara..."
-                className="w-full rounded-full border border-ink-200 bg-white py-2.5 pl-11 pr-4 text-sm text-ink-700 placeholder:text-ink-400 focus:border-gold-400 focus:outline-none"
+                placeholder="Search products..."
+                className="w-full rounded-full border border-white/20 bg-white/12 py-2.5 pl-11 pr-4 text-sm font-medium text-white placeholder:text-cream/65 focus:border-gold-300 focus:outline-none"
               />
             </form>
 
@@ -89,7 +89,7 @@ export function HeaderNav({ nav }: { nav: NavItem[] }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="py-3 text-base text-ink-700 border-b border-ink-700/5 last:border-0"
+                  className="border-b border-white/10 py-3 text-base font-medium text-cream last:border-0 hover:text-gold-100"
                 >
                   {item.label}
                 </Link>

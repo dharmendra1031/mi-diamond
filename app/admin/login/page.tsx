@@ -3,7 +3,7 @@ import { Diamond } from "lucide-react";
 import { LoginForm } from "./login-form";
 import { siteConfig } from "@/lib/format";
 
-export const metadata = { title: "Yönetici Girişi" };
+export const metadata = { title: "Admin Sign In" };
 
 export default async function LoginPage({
   searchParams,
@@ -20,9 +20,9 @@ export default async function LoginPage({
       </Link>
 
       <div className="mt-10 w-full max-w-md rounded-2xl bg-white p-8 shadow-soft">
-        <h1 className="font-serif text-2xl text-ink-700">Yönetici Girişi</h1>
+        <h1 className="font-serif text-2xl text-ink-700">Admin Sign In</h1>
         <p className="mt-1 text-sm text-ink-500">
-          Ürünlerinizi yönetmek için giriş yapın.
+          Sign in to manage your products.
         </p>
 
         {error && (
@@ -38,7 +38,7 @@ export default async function LoginPage({
         href="/"
         className="mt-6 text-xs text-ink-400 hover:text-ink-700"
       >
-        ← Siteye geri dön
+        ← Back to site
       </Link>
     </div>
   );

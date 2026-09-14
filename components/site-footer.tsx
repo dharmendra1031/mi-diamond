@@ -17,11 +17,11 @@ export async function SiteFooter() {
     const { profile } = await getCurrentProfile();
     isAdmin = profile?.is_admin ?? false;
   } catch {
-    // Supabase env eksikse footer anonim render edilir.
+    // Render an anonymous footer when Supabase env vars are missing.
   }
 
   return (
-    <footer className="mt-28 bg-ink-900 text-cream">
+    <footer className="mt-28 border-t border-gold-400/20 bg-gradient-to-br from-ink-700 via-ink-600 to-silver-800 text-cream">
       <div className="container-prose py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.35fr_.65fr_.9fr]">
           <div>
@@ -38,36 +38,36 @@ export async function SiteFooter() {
                 </span>
               </div>
             </div>
-            <p className="mt-6 max-w-lg font-serif text-2xl leading-relaxed text-cream/85 md:text-3xl">
-              Özel anları, nesilden nesile aktarılacak zamansız mücevherlere dönüştürüyoruz.
+            <p className="mt-6 max-w-lg font-serif text-2xl leading-relaxed text-white md:text-3xl">
+              We turn special moments into timeless jewelry to be passed down for generations.
             </p>
             <a
-              href={whatsappUrl("Merhaba, koleksiyonunuz hakkında bilgi almak istiyorum.")}
+              href={whatsappUrl("Hello, I would like to get information about your collection.")}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-7 inline-flex items-center gap-2 border-b border-gold-400 pb-1 text-xs uppercase tracking-[0.18em] text-gold-300 transition hover:text-gold-200"
             >
               <MessageCircle className="h-4 w-4" />
-              Kişisel danışmanla görüşün
+              Speak with a personal consultant
             </a>
           </div>
 
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-gold-400">
-              Keşfedin
+              Explore
             </p>
-            <ul className="mt-5 space-y-3 text-sm text-cream/70">
-              <li><Link href="/urunler" className="transition hover:text-cream">Koleksiyon</Link></li>
-              <li><Link href="/hakkimizda" className="transition hover:text-cream">Hakkımızda</Link></li>
-              <li><Link href="/iletisim" className="transition hover:text-cream">İletişim</Link></li>
+            <ul className="mt-5 space-y-3 text-sm font-medium text-cream/88">
+              <li><Link href="/products" className="transition hover:text-cream">Collection</Link></li>
+              <li><Link href="/about" className="transition hover:text-cream">About</Link></li>
+              <li><Link href="/contact" className="transition hover:text-cream">Contact</Link></li>
             </ul>
           </div>
 
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-gold-400">
-              İletişim
+              Contact
             </p>
-            <ul className="mt-5 space-y-4 text-sm text-cream/70">
+            <ul className="mt-5 space-y-4 text-sm font-medium text-cream/88">
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
                 <span>{siteConfig.address}</span>
@@ -99,15 +99,15 @@ export async function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-cream/10 pt-7 text-[10px] uppercase tracking-[0.16em] text-cream/40 md:flex-row md:items-center md:justify-between">
-          <span>© {new Date().getFullYear()} {siteConfig.name}. Tüm hakları saklıdır.</span>
+        <div className="mt-14 flex flex-col gap-4 border-t border-cream/15 pt-7 text-[10px] font-semibold uppercase tracking-[0.14em] text-cream/70 md:flex-row md:items-center md:justify-between">
+          <span>(c) {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</span>
           {isAdmin && (
             <Link
               href="/admin"
               className="inline-flex items-center gap-1.5 text-gold-400 transition hover:text-gold-300"
             >
               <LayoutGrid className="h-3.5 w-3.5" />
-              Yönetim Paneli
+              Admin Panel
             </Link>
           )}
         </div>

@@ -9,9 +9,9 @@ export function WishlistIcon() {
 
   return (
     <Link
-      href="/favoriler"
+      href="/wishlist"
       className="relative flex h-10 w-10 items-center justify-center text-ink-700 hover:text-gold-500 transition"
-      aria-label="Favoriler"
+      aria-label="Wishlist"
     >
       <Heart className="h-5 w-5" />
       {items.length > 0 && (

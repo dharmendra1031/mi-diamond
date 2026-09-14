@@ -38,9 +38,9 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
   if (!loggedIn) {
     return (
       <Link
-        href="/giris"
+        href="/login"
         className="flex h-10 w-10 items-center justify-center text-ink-700 hover:text-gold-500 transition"
-        aria-label="Giriş Yap"
+        aria-label="Sign In"
       >
         <User className="h-5 w-5" />
       </Link>
@@ -52,7 +52,7 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="flex h-10 w-10 items-center justify-center text-ink-700 hover:text-gold-500 transition"
-        aria-label="Hesabım"
+        aria-label="My Account"
         aria-expanded={open}
       >
         <UserCircle className="h-5 w-5" />
@@ -62,26 +62,26 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
         <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white shadow-lg border border-ink-700/5 py-2 z-50">
           <div className="px-4 py-3 border-b border-ink-700/5">
             <p className="font-medium text-sm text-ink-700 truncate">
-              {fullName || "Hoş geldiniz"}
+              {fullName || "Welcome"}
             </p>
             <p className="text-xs text-ink-400 truncate">{email}</p>
           </div>
 
           <Link
-            href="/hesap"
+            href="/account"
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-cream"
           >
             <UserCircle className="h-4 w-4 text-ink-400" />
-            Hesabım
+            My Account
           </Link>
           <Link
-            href="/hesap/siparislerim"
+            href="/account/orders"
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-cream"
           >
             <ShoppingBag className="h-4 w-4 text-ink-400" />
-            Siparişlerim
+            My Orders
           </Link>
           {isAdmin && (
             <Link
@@ -90,7 +90,7 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-gold-600 hover:bg-cream"
             >
               <Settings className="h-4 w-4" />
-              Yönetim Paneli
+              Admin Panel
             </Link>
           )}
           <button
@@ -98,7 +98,7 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-ink-500 hover:bg-cream border-t border-ink-700/5 mt-1"
           >
             <LogOut className="h-4 w-4" />
-            Çıkış yap
+            Sign out
           </button>
         </div>
       )}

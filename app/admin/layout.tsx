@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { siteConfig } from "@/lib/format";
 import { signOutAction } from "./actions";
 
-export const metadata = { title: "Yönetim" };
+export const metadata = { title: "Admin" };
 
 export default async function AdminLayout({
   children,
@@ -35,16 +35,16 @@ export default async function AdminLayout({
               <span className="font-serif text-xl">{siteConfig.name}</span>
             </Link>
             <p className="mt-1 text-xs uppercase tracking-[0.2em] text-ink-400">
-              Yönetim Paneli
+              Admin Panel
             </p>
           </div>
 
           <nav className="flex-1 space-y-1 p-4">
             {[
-              { href: "/admin", label: "Pano", icon: LayoutGrid },
-              { href: "/admin/urunler", label: "Ürünler", icon: Package },
-              { href: "/admin/kategoriler", label: "Kategoriler", icon: Tags },
-              { href: "/admin/siparisler", label: "Talepler", icon: ShoppingBag },
+              { href: "/admin", label: "Dashboard", icon: LayoutGrid },
+              { href: "/admin/products", label: "Products", icon: Package },
+              { href: "/admin/categories", label: "Categoryler", icon: Tags },
+              { href: "/admin/orders", label: "Talepler", icon: ShoppingBag },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -64,11 +64,11 @@ export default async function AdminLayout({
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-ink-400 hover:text-ink-700"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              Siteyi görüntüle
+              View site
             </Link>
             {user && (
               <div className="px-3 py-2">
-                <p className="text-xs text-ink-400">Giriş yapan</p>
+                <p className="text-xs text-ink-400">Signed in as</p>
                 <p className="truncate text-sm text-ink-700">{user.email}</p>
               </div>
             )}
@@ -77,7 +77,7 @@ export default async function AdminLayout({
                 type="submit"
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-ink-500 hover:bg-cream hover:text-ink-700"
               >
-                <LogOut className="h-4 w-4" /> Çıkış yap
+                <LogOut className="h-4 w-4" /> Sign out
               </button>
             </form>
           </div>
@@ -94,7 +94,7 @@ export default async function AdminLayout({
               <button
                 type="submit"
                 className="text-xs text-ink-500"
-                aria-label="Çıkış yap"
+                aria-label="Sign out"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -102,10 +102,10 @@ export default async function AdminLayout({
           </header>
           <nav className="md:hidden flex border-b border-ink-700/10 bg-white text-xs">
             {[
-              { href: "/admin", label: "Pano" },
-              { href: "/admin/urunler", label: "Ürünler" },
-              { href: "/admin/kategoriler", label: "Kategori" },
-              { href: "/admin/siparisler", label: "Talepler" },
+              { href: "/admin", label: "Dashboard" },
+              { href: "/admin/products", label: "Products" },
+              { href: "/admin/categories", label: "Category" },
+              { href: "/admin/orders", label: "Talepler" },
             ].map((i) => (
               <Link
                 key={i.href}

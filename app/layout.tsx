@@ -18,14 +18,14 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: {
-    default: "Mi Diamond — Butik Pırlanta & Yüzük",
+    default: "Mi Diamond - Boutique Diamonds & Rings",
     template: "%s | Mi Diamond",
   },
   description:
-    "Mi Diamond, özenle seçilmiş pırlanta yüzükler, alyanslar ve butik tasarımlarıyla hayatınızın özel anlarına eşlik eder.",
+    "Mi Diamond accompanies life's special moments with carefully selected diamond rings, wedding bands, and boutique designs.",
   openGraph: {
     type: "website",
-    locale: "tr_TR",
+    locale: "en_US",
     siteName: "Mi Diamond",
   },
 };
@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

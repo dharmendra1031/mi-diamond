@@ -15,6 +15,6 @@ export async function updateOrderStatusAction(id: string, formData: FormData) {
 
   if (error) return { error: error.message };
 
-  revalidatePath("/admin/siparisler");
-  revalidatePath(`/admin/siparisler/${id}`);
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${id}`);
 }

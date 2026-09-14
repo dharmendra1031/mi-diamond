@@ -15,7 +15,7 @@ export function AddToCartButton({ product }: { product: Product }) {
         disabled
         className="inline-flex items-center justify-center gap-2 rounded-full bg-ink-200 px-6 py-3 text-sm font-medium text-ink-500"
       >
-        Tükendi
+        Sold Out
       </button>
     );
   }
@@ -36,11 +36,11 @@ export function AddToCartButton({ product }: { product: Product }) {
     <button onClick={onClick} className="btn-primary">
       {added ? (
         <>
-          <Check className="h-4 w-4" /> Sepete Eklendi
+          <Check className="h-4 w-4" /> Carte Addndi
         </>
       ) : (
         <>
-          <ShoppingBag className="h-4 w-4" /> Sepete Ekle
+          <ShoppingBag className="h-4 w-4" /> Carte Add
         </>
       )}
     </button>

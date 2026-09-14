@@ -17,7 +17,7 @@ export function ProductGallery({
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-square overflow-hidden rounded-3xl bg-ink-50">
+      <div className="relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/60 bg-gradient-to-br from-cream via-silver-100 to-gold-100 shadow-premium">
         {cover ? (
           <Image
             src={cover}
@@ -33,8 +33,8 @@ export function ProductGallery({
           </div>
         )}
         {discount && (
-          <span className="absolute top-4 left-4 rounded-full bg-gold-400 px-4 py-1.5 text-sm font-medium text-ink-700">
-            %{discount} İndirim
+          <span className="absolute left-4 top-4 rounded-full bg-gold-400 px-4 py-1.5 text-sm font-bold text-ink-900 shadow-gold">
+            %{discount} Off
           </span>
         )}
       </div>
@@ -45,8 +45,8 @@ export function ProductGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`relative aspect-square overflow-hidden rounded-xl bg-ink-50 transition ${
-                active === i ? "ring-2 ring-gold-400" : "opacity-70 hover:opacity-100"
+              className={`relative aspect-square overflow-hidden rounded-xl border border-white/60 bg-silver-100 shadow-soft transition ${
+                active === i ? "ring-2 ring-gold-500" : "opacity-75 hover:opacity-100"
               }`}
             >
               <Image

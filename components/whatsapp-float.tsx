@@ -3,10 +3,10 @@ import { whatsappUrl } from "@/lib/format";
 export function WhatsAppFloat() {
   return (
     <a
-      href={whatsappUrl("Merhaba, ürünleriniz hakkında bilgi almak istiyorum.")}
+      href={whatsappUrl("Hello, I would like to get information about your products.")}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="WhatsApp ile iletişime geçin"
+      aria-label="Contact us on WhatsApp"
       className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-110"
     >
       <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current" aria-hidden="true">

@@ -29,7 +29,7 @@ export function NewsletterForm() {
     } catch (err) {
       setStatus("error");
       setError(
-        err instanceof Error ? err.message : "Bir hata oluştu, tekrar deneyin.",
+        err instanceof Error ? err.message : "Something went wrong, please try again.",
       );
     }
   }
@@ -37,7 +37,7 @@ export function NewsletterForm() {
   if (status === "ok") {
     return (
       <div className="rounded-full bg-gold-400/10 border border-gold-400/30 px-4 py-2.5 text-sm text-gold-200 inline-flex items-center gap-2">
-        <Check className="h-4 w-4" /> Aramıza hoş geldiniz!
+        <Check className="h-4 w-4" /> Welcome aboard!
       </div>
     );
   }
@@ -49,7 +49,7 @@ export function NewsletterForm() {
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="E-posta adresiniz"
+        placeholder="Your email address"
         className="flex-1 rounded-full border border-cream/20 bg-cream/5 px-5 py-2.5 text-sm text-cream placeholder:text-cream/40 focus:border-gold-400 focus:outline-none"
       />
       <button

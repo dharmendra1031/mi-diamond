@@ -24,12 +24,12 @@ import type { Order, OrderStatus } from "@/lib/supabase/types";
 export const dynamic = "force-dynamic";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
-  new: "Yeni",
-  contacted: "Arandı",
-  confirmed: "Onaylandı",
-  shipped: "Kargoda",
-  completed: "Tamamlandı",
-  cancelled: "İptal",
+  new: "New",
+  contacted: "Contacted",
+  confirmed: "Confirmed",
+  shipped: "Shipping",
+  completed: "Completed",
+  cancelled: "Cancel",
 };
 
 const STATUS_COLOR: Record<OrderStatus, string> = {
@@ -43,10 +43,10 @@ const STATUS_COLOR: Record<OrderStatus, string> = {
 
 function greeting() {
   const h = new Date().getHours();
-  if (h < 6) return "İyi geceler";
-  if (h < 12) return "Günaydın";
-  if (h < 18) return "İyi günler";
-  return "İyi akşamlar";
+  if (h < 6) return "Good night";
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
 }
 
 export default async function AdminDashboard() {
@@ -153,7 +153,7 @@ export default async function AdminDashboard() {
     ? Math.round(((monthOrderCount - prevOrderCount) / prevOrderCount) * 100)
     : null;
 
-  // Durum dağılımı (iptal hariç aktif siparişler)
+  // Status distribution for active orders, excluding cancelled orders.
   const statusGroups: Record<string, number> = {};
   (allOrdersForStatus ?? []).forEach((o) => {
     statusGroups[o.status as string] = (statusGroups[o.status as string] ?? 0) + 1;
@@ -168,10 +168,10 @@ export default async function AdminDashboard() {
         <div>
           <p className="text-sm text-ink-400">{greeting()},</p>
           <h1 className="font-serif text-3xl text-ink-700">
-            {profile?.full_name || "Yönetici"} 👋
+            {profile?.full_name || "Admin"} 👋
           </h1>
           <p className="mt-1 text-sm text-ink-500">
-            Son 30 gün özeti — bugün{" "}
+            Last 30 days summary - today{" "}
             {now.toLocaleDateString("tr-TR", {
               day: "numeric",
               month: "long",
@@ -179,8 +179,8 @@ export default async function AdminDashboard() {
             })}
           </p>
         </div>
-        <Link href="/admin/urunler/yeni" className="btn-primary">
-          <Plus className="h-4 w-4" /> Yeni Ürün Ekle
+        <Link href="/admin/products/new" className="btn-primary">
+          <Plus className="h-4 w-4" /> New Product Add
         </Link>
       </header>
 
@@ -188,32 +188,32 @@ export default async function AdminDashboard() {
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           icon={DollarSign}
-          label="Tutar (Onaylı)"
+          label="Revenue (Confirmed)"
           value={formatPrice(monthRevenue)}
           delta={revenueDelta}
           tone="gold"
         />
         <StatCard
           icon={ShoppingBag}
-          label="Sipariş Talebi"
+          label="Order Requests"
           value={String(monthOrderCount)}
           delta={orderDelta}
           tone="ink"
-          href="/admin/siparisler"
+          href="/admin/orders"
         />
         <StatCard
           icon={Package}
-          label="Yayındaki Ürün"
+          label="Publishingdaki Product"
           value={`${publishedCount ?? 0} / ${productCount ?? 0}`}
           tone="muted"
-          href="/admin/urunler"
+          href="/admin/products"
         />
         <StatCard
           icon={AlertTriangle}
-          label="Yeni Talep"
+          label="New Talep"
           value={String(newOrdersCount ?? 0)}
           tone={(newOrdersCount ?? 0) > 0 ? "alert" : "muted"}
-          href="/admin/siparisler?status=new"
+          href="/admin/orders?status=new"
           accent={(newOrdersCount ?? 0) > 0}
         />
       </section>
@@ -223,16 +223,16 @@ export default async function AdminDashboard() {
         <div className="lg:col-span-2 rounded-2xl bg-white p-6 shadow-soft">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-lg text-ink-700">Talep Durumları</h2>
+              <h2 className="font-serif text-lg text-ink-700">Request Statuses</h2>
               <p className="text-xs text-ink-400">
-                Aktif siparişlerin durumu (iptal hariç)
+                Status of active orders (excluding cancelled)
               </p>
             </div>
             <Link
-              href="/admin/siparisler"
+              href="/admin/orders"
               className="text-xs text-ink-500 hover:text-ink-700"
             >
-              Tümü →
+              All →
             </Link>
           </div>
 
@@ -246,7 +246,7 @@ export default async function AdminDashboard() {
                   return (
                     <Link
                       key={status}
-                      href={`/admin/siparisler?status=${status}`}
+                      href={`/admin/orders?status=${status}`}
                       className="block group"
                     >
                       <div className="flex items-baseline justify-between text-xs text-ink-500 mb-1.5">
@@ -273,38 +273,38 @@ export default async function AdminDashboard() {
           ) : (
             <div className="mt-8 text-center py-8 text-sm text-ink-400">
               <Layers className="mx-auto h-8 w-8 text-ink-200" strokeWidth={1.2} />
-              <p className="mt-2">Henüz aktif sipariş talebi yok.</p>
+              <p className="mt-2">No active order requests yet.</p>
             </div>
           )}
         </div>
 
         <div className="rounded-2xl bg-gradient-to-br from-ink-700 to-ink-600 p-6 text-cream shadow-soft">
           <h2 className="font-serif text-lg flex items-center gap-2">
-            <Diamond className="h-4 w-4 text-gold-400" /> Hızlı Aksiyonlar
+            <Diamond className="h-4 w-4 text-gold-400" /> Quick Actions
           </h2>
           <ul className="mt-5 space-y-2">
             <QuickAction
-              href="/admin/urunler/yeni"
+              href="/admin/products/new"
               icon={Plus}
-              label="Yeni ürün ekle"
-              hint="Fotoğraf + fiyat"
+              label="New products ekle"
+              hint="Photo + price"
             />
             <QuickAction
-              href="/admin/urunler"
+              href="/admin/products"
               icon={Package}
-              label="Ürünleri yönet"
-              hint={`${productCount ?? 0} ürün`}
+              label="Manage products"
+              hint={`${productCount ?? 0} products`}
             />
             <QuickAction
-              href="/admin/kategoriler"
+              href="/admin/categories"
               icon={Tags}
-              label="Kategori düzenle"
-              hint={`${categoryCount ?? 0} kategori`}
+              label="Edit categories"
+              hint={`${categoryCount ?? 0} categories`}
             />
             <QuickAction
-              href="/admin/siparisler"
+              href="/admin/orders"
               icon={ShoppingBag}
-              label="Talepleri görüntüle"
+              label="View requests"
               hint={`${newOrdersCount ?? 0} yeni`}
               highlight={(newOrdersCount ?? 0) > 0}
             />
@@ -318,10 +318,10 @@ export default async function AdminDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-lg text-ink-700">Son Talepler</h2>
             <Link
-              href="/admin/siparisler"
+              href="/admin/orders"
               className="text-xs text-ink-500 hover:text-ink-700"
             >
-              Tümü →
+              All →
             </Link>
           </div>
 
@@ -330,7 +330,7 @@ export default async function AdminDashboard() {
               {(recentOrders as Order[]).map((o) => (
                 <li key={o.id}>
                   <Link
-                    href={`/admin/siparisler/${o.id}`}
+                    href={`/admin/orders/${o.id}`}
                     className="flex items-center justify-between py-3 hover:bg-cream/40 -mx-2 px-2 rounded transition"
                   >
                     <div className="min-w-0 flex-1">
@@ -342,7 +342,7 @@ export default async function AdminDashboard() {
                       </p>
                       <p className="text-xs text-ink-400 mt-0.5">
                         {new Date(o.created_at).toLocaleDateString("tr-TR")} •{" "}
-                        {o.items.length} ürün
+                        {o.items.length} products
                       </p>
                     </div>
                     <div className="text-right">
@@ -363,7 +363,7 @@ export default async function AdminDashboard() {
                 className="mx-auto h-8 w-8 text-ink-200"
                 strokeWidth={1.2}
               />
-              <p className="mt-2">Henüz talep yok.</p>
+              <p className="mt-2">No requests yet.</p>
             </div>
           )}
         </div>
@@ -371,10 +371,10 @@ export default async function AdminDashboard() {
         <div className="rounded-2xl bg-white p-6 shadow-soft">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-500" />
-            <h2 className="font-serif text-lg text-ink-700">Stok Uyarıları</h2>
+            <h2 className="font-serif text-lg text-ink-700">Stock Alerts</h2>
           </div>
           <p className="text-xs text-ink-400 mt-1">
-            Tükenen veya siparişe özel ürünler
+            Sold-out or made-to-order products
           </p>
 
           {lowStockProducts && lowStockProducts.length > 0 ? (
@@ -382,7 +382,7 @@ export default async function AdminDashboard() {
               {lowStockProducts.map((p) => (
                 <li key={p.id}>
                   <Link
-                    href={`/admin/urunler/${p.id}`}
+                    href={`/admin/products/${p.id}`}
                     className="flex items-center gap-3 -mx-2 px-2 py-2 rounded hover:bg-cream/40 transition"
                   >
                     <div className="relative h-10 w-10 rounded-lg bg-ink-50 overflow-hidden shrink-0">
@@ -408,8 +408,8 @@ export default async function AdminDashboard() {
                         }`}
                       >
                         {p.stock_status === "sold_out"
-                          ? "Tükendi"
-                          : "Siparişe Özel"}
+                          ? "Sold Out"
+                          : "Made to Order"}
                       </p>
                     </div>
                   </Link>
@@ -428,12 +428,12 @@ export default async function AdminDashboard() {
       <section className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 rounded-2xl bg-white p-6 shadow-soft">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-lg text-ink-700">Son Eklenen Ürünler</h2>
+            <h2 className="font-serif text-lg text-ink-700">Recently Added Products</h2>
             <Link
-              href="/admin/urunler"
+              href="/admin/products"
               className="text-xs text-ink-500 hover:text-ink-700"
             >
-              Tümü →
+              All →
             </Link>
           </div>
 
@@ -442,7 +442,7 @@ export default async function AdminDashboard() {
               {recentProducts.map((p) => (
                 <li key={p.id}>
                   <Link
-                    href={`/admin/urunler/${p.id}`}
+                    href={`/admin/products/${p.id}`}
                     className="flex items-center gap-3 rounded-lg p-2 hover:bg-cream/40 transition"
                   >
                     <div className="relative h-12 w-12 rounded-lg bg-ink-50 overflow-hidden shrink-0">
@@ -477,12 +477,12 @@ export default async function AdminDashboard() {
           ) : (
             <div className="mt-6 text-center py-8 text-sm text-ink-400">
               <Package className="mx-auto h-8 w-8 text-ink-200" strokeWidth={1.2} />
-              <p className="mt-2">Henüz ürün yok.</p>
+              <p className="mt-2">No products yet.</p>
               <Link
-                href="/admin/urunler/yeni"
+                href="/admin/products/new"
                 className="text-gold-500 hover:underline mt-2 inline-block"
               >
-                İlk ürünü ekle →
+                Add the first product →
               </Link>
             </div>
           )}
@@ -491,7 +491,7 @@ export default async function AdminDashboard() {
         <div className="rounded-2xl bg-cream/40 p-6 border border-ink-700/5">
           <div className="flex items-center gap-2">
             <Mail className="h-4 w-4 text-gold-500" />
-            <h2 className="font-serif text-lg text-ink-700">Bülten Aboneleri</h2>
+            <h2 className="font-serif text-lg text-ink-700">Newsletter Subscribers</h2>
           </div>
           <p className="mt-3 text-3xl font-medium text-ink-700">
             {newslettersCount ?? 0}
@@ -516,19 +516,19 @@ export default async function AdminDashboard() {
       {/* Quick stats footer */}
       <section className="mt-6 grid gap-4 sm:grid-cols-3">
         <MiniStat
-          label="Öne Çıkan"
+          label="Featured"
           value={featuredCount ?? 0}
           icon={Star}
           accent="gold"
         />
         <MiniStat
-          label="Tükenen"
+          label="Sold Out"
           value={soldOutCount ?? 0}
           icon={EyeOff}
           accent="red"
         />
         <MiniStat
-          label="Kategori"
+          label="Category"
           value={categoryCount ?? 0}
           icon={Tags}
           accent="ink"

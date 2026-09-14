@@ -26,9 +26,9 @@ export function slugify(input: string) {
 }
 
 export const stockLabel: Record<string, string> = {
-  available: "Stokta",
-  sold_out: "Tükendi",
-  on_request: "Siparişe Özel",
+  available: "In Stock",
+  sold_out: "Sold Out",
+  on_request: "Made to Order",
 };
 
 export const siteConfig = {
@@ -37,7 +37,7 @@ export const siteConfig = {
   instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "midiamond",
   phone: process.env.NEXT_PUBLIC_PHONE ?? "+90 555 123 45 67",
   email: process.env.NEXT_PUBLIC_EMAIL ?? "info@midiamond.com.tr",
-  address: process.env.NEXT_PUBLIC_ADDRESS ?? "Ataşehir, İstanbul",
+  address: process.env.NEXT_PUBLIC_ADDRESS ?? "Istanbul, Turkey",
 };
 
 export function whatsappUrl(message?: string) {

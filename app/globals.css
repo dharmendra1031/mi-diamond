@@ -13,7 +13,13 @@
   }
 
   body {
-    @apply bg-cream text-ink-700 font-sans antialiased;
+    @apply bg-[#f3efe6] text-ink-800 font-sans antialiased;
+    background:
+      radial-gradient(circle at top left, rgba(201, 162, 74, 0.18), transparent 30rem),
+      radial-gradient(circle at 88% 8%, rgba(216, 216, 207, 0.32), transparent 24rem),
+      radial-gradient(circle at 62% 58%, rgba(11, 26, 47, 0.08), transparent 32rem),
+      linear-gradient(180deg, #f7f2e8 0%, #eee6d7 48%, #e9deca 100%);
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4 {
@@ -28,15 +34,15 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-ink-800 bg-ink-800 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-cream transition hover:bg-transparent hover:text-ink-800;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink-700 bg-ink-700 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-cream shadow-gold transition hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-400 hover:text-ink-900;
   }
 
   .btn-gold {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-gold-400 bg-gold-400 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-800 transition hover:bg-transparent hover:text-gold-500;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-gold-400 bg-gold-400 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-900 shadow-gold transition hover:-translate-y-0.5 hover:bg-gold-300;
   }
 
   .btn-outline {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 border border-ink-700/25 bg-transparent px-6 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-700 transition hover:border-ink-800 hover:bg-ink-800 hover:text-cream;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink-700/35 bg-white/55 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-800 shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-ink-700 hover:bg-ink-700 hover:text-cream;
   }
 
   .container-prose {
@@ -44,6 +50,14 @@
   }
 
   .label-eyebrow {
-    @apply text-[10px] font-medium uppercase tracking-[0.24em] text-gold-600;
+    @apply text-[10px] font-bold uppercase tracking-[0.2em] text-gold-700;
+  }
+
+  .premium-panel {
+    @apply border border-white/55 bg-white/62 shadow-soft backdrop-blur-xl;
+  }
+
+  .jewel-panel {
+    @apply border border-gold-200/45 bg-gradient-to-br from-white/80 via-cream/70 to-silver-100/70 shadow-soft backdrop-blur-xl;
   }
 }

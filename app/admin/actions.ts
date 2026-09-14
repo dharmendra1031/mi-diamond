@@ -32,7 +32,7 @@ export async function createProductAction(formData: FormData) {
   const supabase = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
-  if (!name) return { error: "Ürün adı zorunludur." };
+  if (!name) return { error: "Product name is required." };
 
   const baseSlug = slugify(name);
   const slug = `${baseSlug}-${Date.now().toString(36).slice(-4)}`;
@@ -68,16 +68,16 @@ export async function createProductAction(formData: FormData) {
   if (error) return { error: error.message };
 
   revalidatePath("/");
-  revalidatePath("/urunler");
-  revalidatePath("/admin/urunler");
-  redirect(`/admin/urunler/${data.id}?ok=1`);
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
+  redirect(`/admin/products/${data.id}?ok=1`);
 }
 
 export async function updateProductAction(id: string, formData: FormData) {
   const supabase = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
-  if (!name) return { error: "Ürün adı zorunludur." };
+  if (!name) return { error: "Product name is required." };
 
   const price = parsePrice(formData.get("price"));
   const oldPrice = parseOptionalPrice(formData.get("old_price"));
@@ -103,10 +103,10 @@ export async function updateProductAction(id: string, formData: FormData) {
   if (error) return { error: error.message };
 
   revalidatePath("/");
-  revalidatePath("/urunler");
-  revalidatePath(`/urunler/[slug]`, "page");
-  revalidatePath("/admin/urunler");
-  redirect(`/admin/urunler/${id}?ok=1`);
+  revalidatePath("/products");
+  revalidatePath(`/products/[slug]`, "page");
+  revalidatePath("/admin/products");
+  redirect(`/admin/products/${id}?ok=1`);
 }
 
 export async function deleteProductAction(id: string) {
@@ -115,9 +115,9 @@ export async function deleteProductAction(id: string) {
   if (error) return { error: error.message };
 
   revalidatePath("/");
-  revalidatePath("/urunler");
-  revalidatePath("/admin/urunler");
-  redirect("/admin/urunler");
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
 }
 
 // =====================================================
@@ -129,7 +129,7 @@ export async function upsertCategoryAction(formData: FormData) {
 
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
-  if (!name) return { error: "Kategori adı zorunludur." };
+  if (!name) return { error: "Category name is required." };
 
   const slug = String(formData.get("slug") ?? slugify(name)).trim();
   const sort_order = parseInt(String(formData.get("sort_order") ?? "0"), 10) || 0;
@@ -149,9 +149,9 @@ export async function upsertCategoryAction(formData: FormData) {
   }
 
   revalidatePath("/");
-  revalidatePath("/urunler");
-  revalidatePath("/admin/kategoriler");
-  redirect("/admin/kategoriler?ok=1");
+  revalidatePath("/products");
+  revalidatePath("/admin/categories");
+  redirect("/admin/categories?ok=1");
 }
 
 export async function deleteCategoryAction(id: string) {
@@ -160,7 +160,7 @@ export async function deleteCategoryAction(id: string) {
   if (error) return { error: error.message };
 
   revalidatePath("/");
-  revalidatePath("/urunler");
-  revalidatePath("/admin/kategoriler");
-  redirect("/admin/kategoriler");
+  revalidatePath("/products");
+  revalidatePath("/admin/categories");
+  redirect("/admin/categories");
 }

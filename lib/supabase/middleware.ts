@@ -38,26 +38,26 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAdminRoute = path.startsWith("/admin");
   const isAdminLogin = path === "/admin/login";
-  const isAccountRoute = path.startsWith("/hesap");
-  const isAuthPage = path === "/giris" || path === "/kayit";
+  const isAccountRoute = path.startsWith("/account");
+  const isAuthPage = path === "/login" || path === "/register";
 
-  // Hesap rotaları: girişsiz ise /giris'e yönlendir
+  // Account routes: redirect guests to /login
   if (isAccountRoute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/giris";
+    url.pathname = "/login";
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
 
-  // /giris veya /kayit: girişliyse /hesap'a yönlendir
+  // /login or /register: redirect signed-in users to /account
   if (isAuthPage && user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/hesap";
+    url.pathname = "/account";
     url.search = "";
     return NextResponse.redirect(url);
   }
 
-  // Admin rotaları: kullanıcı yoksa login'e
+  // Admin routes: redirect guests to login
   if (isAdminRoute && !isAdminLogin && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
@@ -65,7 +65,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Admin rotaları: kullanıcı var ama is_admin değilse hesaba yönlendir
+  // Admin routes: redirect non-admin users to account
   if (isAdminRoute && !isAdminLogin && user) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -74,13 +74,13 @@ export async function updateSession(request: NextRequest) {
       .maybeSingle();
     if (!profile?.is_admin) {
       const url = request.nextUrl.clone();
-      url.pathname = "/hesap";
+      url.pathname = "/account";
       url.search = "";
       return NextResponse.redirect(url);
     }
   }
 
-  // Admin login: zaten admin girişliyse /admin'e
+  // Admin login: redirect signed-in admins to /admin
   if (isAdminLogin && user) {
     const { data: profile } = await supabase
       .from("profiles")

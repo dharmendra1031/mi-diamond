@@ -9,9 +9,9 @@ export function CartIcon() {
 
   return (
     <Link
-      href="/sepet"
+      href="/cart"
       className="relative flex h-10 w-10 items-center justify-center text-ink-700 hover:text-gold-500 transition"
-      aria-label="Sepet"
+      aria-label="Cart"
     >
       <ShoppingBag className="h-5 w-5" />
       {count > 0 && (
