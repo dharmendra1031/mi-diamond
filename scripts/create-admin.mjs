@@ -35,16 +35,18 @@ function hashPassword(password) {
   return `${salt}:${hash}`;
 }
 
+const instanceName = process.env.MSSQL_INSTANCE_NAME?.trim();
 const config = {
   server: required("MSSQL_SERVER"),
   database: required("MSSQL_DATABASE"),
   user: required("MSSQL_USER"),
   password: required("MSSQL_PASSWORD"),
-  port: Number(process.env.MSSQL_PORT || 1433),
   options: {
     encrypt: process.env.MSSQL_ENCRYPT === "true",
     trustServerCertificate: process.env.MSSQL_TRUST_SERVER_CERTIFICATE !== "false",
+    ...(instanceName ? { instanceName } : {}),
   },
+  ...(!instanceName ? { port: Number(process.env.MSSQL_PORT || 1433) } : {}),
 };
 
 const email = required("ADMIN_EMAIL").trim().toLowerCase();
