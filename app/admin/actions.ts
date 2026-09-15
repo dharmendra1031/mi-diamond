@@ -4,6 +4,13 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/format";
+import { requireAdmin } from "@/lib/local-auth";
+
+export type AdminActionState = {
+  error: string | null;
+};
+
+const initialActionState: AdminActionState = { error: null };
 
 export async function signOutAction() {
   const supabase = await createClient();
@@ -25,6 +32,8 @@ function parseOptionalPrice(value: FormDataEntryValue | null): number | null {
 }
 
 export async function createProductAction(formData: FormData) {
+  if (!(await requireAdmin())) return { error: "Administrator access required." };
+
   const supabase = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
@@ -68,7 +77,16 @@ export async function createProductAction(formData: FormData) {
   redirect(`/admin/products/${data.id}?ok=1`);
 }
 
+export async function createProductFormAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  return (await createProductAction(formData)) ?? initialActionState;
+}
+
 export async function updateProductAction(id: string, formData: FormData) {
+  if (!(await requireAdmin())) return { error: "Administrator access required." };
+
   const supabase = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
@@ -105,7 +123,17 @@ export async function updateProductAction(id: string, formData: FormData) {
   redirect(`/admin/products/${id}?ok=1`);
 }
 
+export async function updateProductFormAction(
+  id: string,
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  return (await updateProductAction(id, formData)) ?? initialActionState;
+}
+
 export async function deleteProductAction(id: string) {
+  if (!(await requireAdmin())) return { error: "Administrator access required." };
+
   const supabase = await createClient();
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) return { error: error.message };

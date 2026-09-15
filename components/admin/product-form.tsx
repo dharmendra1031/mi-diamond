@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useActionState, useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GripVertical, Loader2, Upload, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  createProductAction,
-  updateProductAction,
+  createProductFormAction,
+  updateProductFormAction,
   deleteProductAction,
 } from "@/app/admin/actions";
 import type { Category, Product } from "@/lib/supabase/types";
@@ -38,7 +39,11 @@ export function ProductForm({
   categories: Category[];
 }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const [deletePending, startTransition] = useTransition();
+  const action = product
+    ? updateProductFormAction.bind(null, product.id)
+    : createProductFormAction;
+  const [state, formAction] = useActionState(action, { error: null });
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [uploading, setUploading] = useState(false);
@@ -90,23 +95,6 @@ export function ProductForm({
     });
   }
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-
-    const formData = new FormData(event.currentTarget);
-    formData.delete("images");
-    images.forEach((url) => formData.append("images", url));
-
-    startTransition(async () => {
-      const result = product
-        ? await updateProductAction(product.id, formData)
-        : await createProductAction(formData);
-
-      if (result?.error) setError(result.error);
-    });
-  }
-
   function onDelete() {
     if (!product) return;
     if (!confirm(`Delete "${product.name}"?`)) return;
@@ -116,8 +104,10 @@ export function ProductForm({
     });
   }
 
+  const displayError = error ?? state.error;
+
   return (
-    <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1fr_320px]">
+    <form action={formAction} className="grid gap-8 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
         <Section title="Basic Information">
           <Field label="Product Name *" name="name" defaultValue={product?.name} required />
@@ -177,6 +167,10 @@ export function ProductForm({
         </Section>
 
         <Section title="Product Images">
+          {images.map((url, index) => (
+            <input key={`${url}-${index}`} type="hidden" name="images" value={url} />
+          ))}
+
           <div className="rounded-xl border-2 border-dashed border-ink-200 bg-cream/40 p-6 text-center">
             <input
               type="file"
@@ -229,7 +223,7 @@ export function ProductForm({
           )}
         </Section>
 
-        {error && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
+        {displayError && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{displayError}</div>}
       </div>
 
       <aside className="space-y-6 lg:sticky lg:top-10 lg:h-fit">
@@ -239,24 +233,33 @@ export function ProductForm({
         </Section>
 
         <div className="space-y-3">
-          <button type="submit" disabled={pending || uploading} className="w-full rounded-full bg-ink-700 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 disabled:opacity-60">
-            {pending ? (
-              <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Saving...</span>
-            ) : product ? "Save Changes" : "Add Product"}
-          </button>
+          <SubmitButton uploading={uploading} label={product ? "Save Changes" : "Add Product"} />
 
           <button type="button" onClick={() => router.back()} className="w-full rounded-full border border-ink-200 bg-white py-3 text-sm text-ink-500 hover:text-ink-700">
             Cancel
           </button>
 
           {product && (
-            <button type="button" onClick={onDelete} className="w-full text-xs text-red-500 hover:underline">
-              Delete this product
+            <button type="button" disabled={deletePending} onClick={onDelete} className="w-full text-xs text-red-500 hover:underline disabled:opacity-60">
+              {deletePending ? "Deleting..." : "Delete this product"}
             </button>
           )}
         </div>
       </aside>
     </form>
+  );
+}
+
+function SubmitButton({ uploading, label }: { uploading: boolean; label: string }) {
+  const { pending } = useFormStatus();
+  const disabled = pending || uploading;
+
+  return (
+    <button type="submit" disabled={disabled} className="w-full rounded-full bg-ink-700 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 disabled:opacity-60">
+      {disabled ? (
+        <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? "Uploading..." : "Saving..."}</span>
+      ) : label}
+    </button>
   );
 }
 
