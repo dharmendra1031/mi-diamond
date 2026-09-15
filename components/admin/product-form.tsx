@@ -4,7 +4,6 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GripVertical, Loader2, Upload, X } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import type { Category, Product } from "@/lib/supabase/types";
 
 const METAL_OPTIONS = [
@@ -25,6 +24,37 @@ const STONE_OPTIONS = [
   "No Stone",
 ];
 
+type PendingImage = {
+  id: string;
+  name: string;
+  src: string;
+};
+
+function uniqueId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function uploadProductImage(file: File) {
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const formData = new FormData();
+  formData.set("bucket", "products");
+  formData.set("path", `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`);
+  formData.set("file", file);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result?.error) {
+    throw new Error(result?.error?.message ?? `Upload failed (${response.status}).`);
+  }
+
+  const publicUrl = result?.data?.publicUrl;
+  if (!publicUrl || typeof publicUrl !== "string") throw new Error("Upload response did not include an image URL.");
+  return publicUrl;
+}
+
 export function ProductForm({
   product,
   categories,
@@ -36,36 +66,33 @@ export function ProductForm({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>(product?.images ?? []);
+  const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const [uploading, setUploading] = useState(false);
 
   async function uploadFiles(files: FileList) {
+    const selected = Array.from(files);
+    const previews = selected.map((file) => ({
+      id: uniqueId(),
+      name: file.name,
+      src: URL.createObjectURL(file),
+    }));
+
+    setPendingImages((current) => [...current, ...previews]);
     setUploading(true);
     setError(null);
 
     try {
-      const supabase = createClient();
-      const uploaded: string[] = [];
-
-      for (const file of Array.from(files)) {
-        const ext = file.name.split(".").pop() ?? "jpg";
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from("products")
-          .upload(path, file, {
-            contentType: file.type,
-            upsert: false,
-          });
-
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage.from("products").getPublicUrl(path);
-        uploaded.push(data.publicUrl);
+      for (const [index, file] of selected.entries()) {
+        const publicUrl = await uploadProductImage(file);
+        setImages((current) => [...current, publicUrl]);
+        setPendingImages((current) => current.filter((item) => item.id !== previews[index].id));
+        URL.revokeObjectURL(previews[index].src);
       }
-
-      setImages((current) => [...current, ...uploaded]);
     } catch (err) {
       setError(err instanceof Error ? `Upload failed: ${err.message}` : "Upload failed.");
     } finally {
+      setPendingImages((current) => current.filter((item) => !previews.some((preview) => preview.id === item.id)));
+      previews.forEach((preview) => URL.revokeObjectURL(preview.src));
       setUploading(false);
     }
   }
@@ -240,6 +267,19 @@ export function ProductForm({
                     <button type="button" onClick={() => removeImage(index)} className="text-white/80 hover:text-red-300" aria-label="Remove image">
                       <X className="h-3.5 w-3.5" />
                     </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {pendingImages.length > 0 && (
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {pendingImages.map((image) => (
+                <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg bg-cream">
+                  <img src={image.src} alt={image.name} className="h-full w-full object-contain p-1 opacity-80" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-ink-700/25 text-cream">
+                    <Loader2 className="h-5 w-5 animate-spin" />
                   </div>
                 </div>
               ))}

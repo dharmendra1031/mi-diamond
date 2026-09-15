@@ -51,11 +51,13 @@ export async function POST(request: Request) {
     const upsert = String(form.get("upsert") ?? "0") === "1";
 
     if (!(file instanceof File)) return fail("Image file is required.");
-    if (!file.type.startsWith("image/")) return fail("Only image files are allowed.");
     if (file.size <= 0 || file.size > MAX_BYTES) return fail("Image must be 12 MB or smaller.");
 
     const extension = path.extname(relative).toLowerCase();
     if (!allowedExtensions.has(extension)) return fail("Unsupported image extension.");
+    if (file.type && file.type !== "application/octet-stream" && !file.type.startsWith("image/")) {
+      return fail("Only image files are allowed.");
+    }
 
     const full = absolutePath(bucket, relative);
     if (!upsert) {
