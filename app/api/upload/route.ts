@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     await mkdir(path.dirname(full), { recursive: true });
     await writeFile(full, Buffer.from(await file.arrayBuffer()));
 
-    const publicUrl = `/uploads/${encodeURIComponent(bucket)}/${relative
+    const publicUrl = `/api/media/${encodeURIComponent(bucket)}/${relative
       .split("/")
       .map(encodeURIComponent)
       .join("/")}`;
