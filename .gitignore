@@ -7,10 +7,14 @@ dist
 .env.local
 .env.*.local
 *.log
+*.zip
 .DS_Store
 .vscode
 .idea
 .claude
+.screenshots/
+.tmp/
+.tmp-*/
 next-env.d.ts
 vercel-env.txt
 tsconfig.tsbuildinfo
