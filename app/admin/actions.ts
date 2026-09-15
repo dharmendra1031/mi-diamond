@@ -145,6 +145,8 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function upsertCategoryAction(formData: FormData) {
+  if (!(await requireAdmin())) return { error: "Administrator access required." };
+
   const supabase = await createClient();
 
   const id = String(formData.get("id") ?? "");
@@ -177,7 +179,16 @@ export async function upsertCategoryAction(formData: FormData) {
   redirect("/admin/categories?ok=1");
 }
 
+export async function upsertCategoryFormAction(
+  _state: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  return (await upsertCategoryAction(formData)) ?? initialActionState;
+}
+
 export async function deleteCategoryAction(id: string) {
+  if (!(await requireAdmin())) return { error: "Administrator access required." };
+
   const supabase = await createClient();
   const { error: productError } = await supabase
     .from("products")
