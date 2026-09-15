@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, Check } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -17,8 +17,8 @@ export function NewsletterForm() {
     setError(null);
 
     try {
-      const supabase = createClient();
-      const { error: dbError } = await supabase
+      const dataClient = createClient();
+      const { error: dbError } = await dataClient
         .from("newsletter_subscribers")
         .insert({ email: email.trim().toLowerCase(), source: "footer" });
       if (dbError && !dbError.message.includes("duplicate")) {

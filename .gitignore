@@ -14,3 +14,16 @@ dist
 next-env.d.ts
 vercel-env.txt
 tsconfig.tsbuildinfo
+public/uploads/*
+!public/uploads/products/
+public/uploads/products/*
+!public/uploads/products/catalog/
+!public/uploads/products/catalog/**
+!public/uploads/site-assets/
+public/uploads/site-assets/*
+!public/uploads/site-assets/logo/
+!public/uploads/site-assets/logo/**
+!public/uploads/site-assets/home_hero/
+!public/uploads/site-assets/home_hero/**
+!public/uploads/site-assets/about_image/
+!public/uploads/site-assets/about_image/**

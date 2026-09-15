@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { ProductForm } from "@/components/admin/product-form";
 
 export const dynamic = "force-dynamic";
@@ -15,10 +15,10 @@ export default async function EditProductPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { ok } = await searchParams;
 
-  const supabase = await createClient();
+  const dataClient = await createClient();
   const [{ data: product }, { data: categories }] = await Promise.all([
-    supabase.from("products").select("*").eq("id", id).maybeSingle(),
-    supabase.from("categories").select("*").order("sort_order"),
+    dataClient.from("products").select("*").eq("id", id).maybeSingle(),
+    dataClient.from("categories").select("*").order("sort_order"),
   ]);
 
   if (!product) notFound();

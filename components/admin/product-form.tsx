@@ -4,13 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GripVertical, Loader2, Upload, X } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import {
-  createProductAction,
-  updateProductAction,
-  deleteProductAction,
-} from "@/app/admin/actions";
-import type { Category, Product } from "@/lib/supabase/types";
+import type { Category, Product } from "@/lib/local-data/types";
 
 const METAL_OPTIONS = [
   "18K Yellow Gold",
@@ -30,6 +24,37 @@ const STONE_OPTIONS = [
   "No Stone",
 ];
 
+type PendingImage = {
+  id: string;
+  name: string;
+  src: string;
+};
+
+function uniqueId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function uploadProductImage(file: File) {
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const formData = new FormData();
+  formData.set("bucket", "products");
+  formData.set("path", `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`);
+  formData.set("file", file);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result?.error) {
+    throw new Error(result?.error?.message ?? `Upload failed (${response.status}).`);
+  }
+
+  const publicUrl = result?.data?.publicUrl;
+  if (!publicUrl || typeof publicUrl !== "string") throw new Error("Upload response did not include an image URL.");
+  return publicUrl;
+}
+
 export function ProductForm({
   product,
   categories,
@@ -41,36 +66,33 @@ export function ProductForm({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>(product?.images ?? []);
+  const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const [uploading, setUploading] = useState(false);
 
   async function uploadFiles(files: FileList) {
+    const selected = Array.from(files);
+    const previews = selected.map((file) => ({
+      id: uniqueId(),
+      name: file.name,
+      src: URL.createObjectURL(file),
+    }));
+
+    setPendingImages((current) => [...current, ...previews]);
     setUploading(true);
     setError(null);
 
     try {
-      const supabase = createClient();
-      const uploaded: string[] = [];
-
-      for (const file of Array.from(files)) {
-        const ext = file.name.split(".").pop() ?? "jpg";
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from("products")
-          .upload(path, file, {
-            contentType: file.type,
-            upsert: false,
-          });
-
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage.from("products").getPublicUrl(path);
-        uploaded.push(data.publicUrl);
+      for (const [index, file] of selected.entries()) {
+        const publicUrl = await uploadProductImage(file);
+        setImages((current) => [...current, publicUrl]);
+        setPendingImages((current) => current.filter((item) => item.id !== previews[index].id));
+        URL.revokeObjectURL(previews[index].src);
       }
-
-      setImages((current) => [...current, ...uploaded]);
     } catch (err) {
       setError(err instanceof Error ? `Upload failed: ${err.message}` : "Upload failed.");
     } finally {
+      setPendingImages((current) => current.filter((item) => !previews.some((preview) => preview.id === item.id)));
+      previews.forEach((preview) => URL.revokeObjectURL(preview.src));
       setUploading(false);
     }
   }
@@ -90,6 +112,26 @@ export function ProductForm({
     });
   }
 
+  function onDelete() {
+    if (!product) return;
+    if (!confirm(`Delete "${product.name}"?`)) return;
+
+    startTransition(async () => {
+      const response = await fetch("/api/admin/products", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id: product.id }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        setError(result?.error?.message ?? "Product delete failed.");
+        return;
+      }
+      router.push("/admin/products");
+      router.refresh();
+    });
+  }
+
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
@@ -97,22 +139,21 @@ export function ProductForm({
     const formData = new FormData(event.currentTarget);
     formData.delete("images");
     images.forEach((url) => formData.append("images", url));
+    if (product) formData.set("id", product.id);
 
     startTransition(async () => {
-      const result = product
-        ? await updateProductAction(product.id, formData)
-        : await createProductAction(formData);
-
-      if (result?.error) setError(result.error);
-    });
-  }
-
-  function onDelete() {
-    if (!product) return;
-    if (!confirm(`Delete "${product.name}"?`)) return;
-
-    startTransition(async () => {
-      await deleteProductAction(product.id);
+      const response = await fetch("/api/admin/products", {
+        method: product ? "PATCH" : "POST",
+        body: formData,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        setError(result?.error?.message ?? "Product save failed.");
+        return;
+      }
+      const id = result?.data?.id ?? product?.id;
+      router.push(`/admin/products/${id}?ok=1`);
+      router.refresh();
     });
   }
 
@@ -177,6 +218,10 @@ export function ProductForm({
         </Section>
 
         <Section title="Product Images">
+          {images.map((url, index) => (
+            <input key={`${url}-${index}`} type="hidden" name="images" value={url} />
+          ))}
+
           <div className="rounded-xl border-2 border-dashed border-ink-200 bg-cream/40 p-6 text-center">
             <input
               type="file"
@@ -227,6 +272,19 @@ export function ProductForm({
               ))}
             </div>
           )}
+
+          {pendingImages.length > 0 && (
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {pendingImages.map((image) => (
+                <div key={image.id} className="relative aspect-square overflow-hidden rounded-lg bg-cream">
+                  <img src={image.src} alt={image.name} className="h-full w-full object-contain p-1 opacity-80" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-ink-700/25 text-cream">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </Section>
 
         {error && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
@@ -240,8 +298,8 @@ export function ProductForm({
 
         <div className="space-y-3">
           <button type="submit" disabled={pending || uploading} className="w-full rounded-full bg-ink-700 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 disabled:opacity-60">
-            {pending ? (
-              <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Saving...</span>
+            {pending || uploading ? (
+              <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? "Uploading..." : "Saving..."}</span>
             ) : product ? "Save Changes" : "Add Product"}
           </button>
 
@@ -250,8 +308,8 @@ export function ProductForm({
           </button>
 
           {product && (
-            <button type="button" onClick={onDelete} className="w-full text-xs text-red-500 hover:underline">
-              Delete this product
+            <button type="button" disabled={pending} onClick={onDelete} className="w-full text-xs text-red-500 hover:underline disabled:opacity-60">
+              {pending ? "Working..." : "Delete this product"}
             </button>
           )}
         </div>

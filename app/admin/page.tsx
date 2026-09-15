@@ -9,14 +9,14 @@ import {
   ArrowRight,
   Diamond,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/local-data/server";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { formatPrice, siteConfig } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
+  const dataClient = await createClient();
   const { profile } = await getCurrentProfile();
 
   const [
@@ -27,21 +27,21 @@ export default async function AdminDashboard() {
     { count: categoryCount },
     { data: recentProducts },
   ] = await Promise.all([
-    supabase.from("products").select("*", { count: "exact", head: true }),
-    supabase
+    dataClient.from("products").select("*", { count: "exact", head: true }),
+    dataClient
       .from("products")
       .select("*", { count: "exact", head: true })
       .eq("is_published", true),
-    supabase
+    dataClient
       .from("products")
       .select("*", { count: "exact", head: true })
       .eq("is_featured", true),
-    supabase
+    dataClient
       .from("products")
       .select("*", { count: "exact", head: true })
       .eq("stock_status", "sold_out"),
-    supabase.from("categories").select("*", { count: "exact", head: true }),
-    supabase
+    dataClient.from("categories").select("*", { count: "exact", head: true }),
+    dataClient
       .from("products")
       .select("id, name, slug, images, price, currency, is_published, is_featured, stock_status")
       .order("created_at", { ascending: false })

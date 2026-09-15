@@ -8,12 +8,12 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { ProductCard } from "@/components/product-card";
 import { siteConfig, whatsappUrl } from "@/lib/format";
 import { getSiteAssetMap } from "@/lib/site-assets";
 import { getDisplayCover } from "@/lib/product-images";
-import type { Product, Category } from "@/lib/supabase/types";
+import type { Product, Category } from "@/lib/local-data/types";
 
 export const revalidate = 60;
 
@@ -23,21 +23,21 @@ export default async function HomePage() {
   let catalogProducts: Product[] = [];
 
   try {
-    const supabase = await createClient();
+    const dataClient = await createClient();
     const [{ data: featuredData }, { data: categoriesData }, { data: catalogData }] =
       await Promise.all([
-        supabase
+        dataClient
           .from("products")
           .select("*")
           .eq("is_published", true)
           .eq("is_featured", true)
           .order("created_at", { ascending: false })
           .limit(8),
-        supabase
+        dataClient
           .from("categories")
           .select("*")
           .order("sort_order", { ascending: true }),
-        supabase
+        dataClient
           .from("products")
           .select("*")
           .eq("is_published", true)
@@ -49,7 +49,7 @@ export default async function HomePage() {
     categories = categoriesData ?? [];
     catalogProducts = catalogData ?? [];
   } catch {
-    // Keep build/preview working when Supabase env vars are missing.
+    // Keep build/preview working when dataClient env vars are missing.
   }
 
   const siteAssets = await getSiteAssetMap(["logo", "home_hero"]);

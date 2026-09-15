@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 export function LoginForm({ next }: { next?: string }) {
   const router = useRouter();
@@ -20,8 +20,8 @@ export function LoginForm({ next }: { next?: string }) {
     const email = String(fd.get("email") ?? "").trim();
     const password = String(fd.get("password") ?? "");
 
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const dataClient = createClient();
+    const { error: authError } = await dataClient.auth.signInWithPassword({
       email,
       password,
     });

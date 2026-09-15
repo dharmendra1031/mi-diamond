@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { CategoryRow } from "./category-row";
 import { CategoryForm } from "./category-form";
 
@@ -11,8 +11,8 @@ export default async function AdminCategoriesPage({
   searchParams: Promise<{ ok?: string }>;
 }) {
   const { ok } = await searchParams;
-  const supabase = await createClient();
-  const { data: categories } = await supabase
+  const dataClient = await createClient();
+  const { data: categories } = await dataClient
     .from("categories")
     .select("*, products(count)")
     .order("sort_order");

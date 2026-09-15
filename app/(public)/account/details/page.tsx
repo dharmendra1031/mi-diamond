@@ -1,4 +1,4 @@
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { ProfileForm } from "./profile-form";
 
 export const dynamic = "force-dynamic";

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, Trash2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 import type { SiteAsset, SiteAssetKey } from "@/lib/site-assets";
 
 const definitions: Array<{ key: SiteAssetKey; label: string; hint: string }> = [
@@ -29,19 +29,19 @@ export function SiteImagesForm({ assets }: { assets: SiteAsset[] }) {
     setError(null);
 
     try {
-      const supabase = createClient();
+      const dataClient = createClient();
       const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
       const path = `${key}/${Date.now()}.${ext}`;
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await dataClient.storage
         .from("site-assets")
         .upload(path, file, { contentType: file.type, upsert: false });
       if (uploadError) throw uploadError;
 
-      const { data: publicData } = supabase.storage.from("site-assets").getPublicUrl(path);
+      const { data: publicData } = dataClient.storage.from("site-assets").getPublicUrl(path);
       const definition = definitions.find((item) => item.key === key)!;
 
-      const { error: saveError } = await supabase.from("site_assets").upsert(
+      const { error: saveError } = await dataClient.from("site_assets").upsert(
         {
           key,
           label: definition.label,
@@ -55,7 +55,7 @@ export function SiteImagesForm({ assets }: { assets: SiteAsset[] }) {
 
       const oldPath = current[key]?.storage_path;
       if (oldPath && oldPath !== path) {
-        await supabase.storage.from("site-assets").remove([oldPath]);
+        await dataClient.storage.from("site-assets").remove([oldPath]);
       }
 
       router.refresh();
@@ -71,16 +71,16 @@ export function SiteImagesForm({ assets }: { assets: SiteAsset[] }) {
     setError(null);
 
     try {
-      const supabase = createClient();
+      const dataClient = createClient();
       const oldPath = current[key]?.storage_path;
 
-      const { error: saveError } = await supabase
+      const { error: saveError } = await dataClient
         .from("site_assets")
         .update({ image_url: null, storage_path: null, updated_at: new Date().toISOString() })
         .eq("key", key);
       if (saveError) throw saveError;
 
-      if (oldPath) await supabase.storage.from("site-assets").remove([oldPath]);
+      if (oldPath) await dataClient.storage.from("site-assets").remove([oldPath]);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Image removal failed.");

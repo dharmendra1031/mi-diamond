@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { ProductCard } from "@/components/product-card";
-import type { Product, Category } from "@/lib/supabase/types";
+import type { Product, Category } from "@/lib/local-data/types";
 
 export const revalidate = 60;
 
@@ -34,16 +34,16 @@ export default async function ProductsPage({ searchParams }: Props) {
   let stones: string[] = [];
 
   try {
-    const supabase = await createClient();
+    const dataClient = await createClient();
 
-    const { data: cats } = await supabase
+    const { data: cats } = await dataClient
       .from("categories")
       .select("*")
       .order("sort_order");
     categories = cats ?? [];
     activeCategory = categories.find((c) => c.slug === categorySlug) ?? null;
 
-    let query = supabase
+    let query = dataClient
       .from("products")
       .select("*")
       .eq("is_published", true);
@@ -70,7 +70,7 @@ export default async function ProductsPage({ searchParams }: Props) {
     products = data ?? [];
 
     // Build filter options from the full published catalog.
-    const { data: distinctData } = await supabase
+    const { data: distinctData } = await dataClient
       .from("products")
       .select("metal, stone")
       .eq("is_published", true);

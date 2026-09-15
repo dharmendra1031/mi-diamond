@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Package, Settings, UserCircle, Gem } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/local-data/server";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { formatPrice } from "@/lib/format";
-import type { Order, OrderStatus } from "@/lib/supabase/types";
+import type { Order, OrderStatus } from "@/lib/local-data/types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,17 +18,17 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
 
 export default async function AccountDashboardPage() {
   const { user, profile } = await getCurrentProfile();
-  const supabase = await createClient();
+  const dataClient = await createClient();
   const isAdmin = profile?.is_admin ?? false;
 
-  const { data: orders } = await supabase
+  const { data: orders } = await dataClient
     .from("orders")
     .select("*")
     .eq("user_id", user!.id)
     .order("created_at", { ascending: false })
     .limit(3);
 
-  const { count: totalOrders } = await supabase
+  const { count: totalOrders } = await dataClient
     .from("orders")
     .select("*", { count: "exact", head: true })
     .eq("user_id", user!.id);

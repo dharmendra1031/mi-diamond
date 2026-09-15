@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { upsertCategoryAction } from "@/app/admin/actions";
 
 type Props = {
   category?: {
@@ -16,22 +16,35 @@ type Props = {
 };
 
 export function CategoryForm({ category, onCancel }: Props) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setError(null);
-    const fd = new FormData(e.currentTarget);
-    if (category) fd.set("id", category.id);
+
+    const formData = new FormData(event.currentTarget);
+    if (category) formData.set("id", category.id);
+
     startTransition(async () => {
-      const result = await upsertCategoryAction(fd);
-      if (result?.error) setError(result.error);
+      const response = await fetch("/api/admin/categories", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        setError(result?.error?.message ?? "Category save failed.");
+        return;
+      }
+      router.push("/admin/categories?ok=1");
+      router.refresh();
     });
   }
 
   return (
     <form onSubmit={onSubmit} className="mt-4 space-y-3">
+      {category && <input type="hidden" name="id" value={category.id} />}
       <input
         name="name"
         defaultValue={category?.name}

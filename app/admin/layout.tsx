@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   LayoutGrid,
   Package,
@@ -9,7 +10,7 @@ import {
   LogOut,
   ExternalLink,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { siteConfig } from "@/lib/format";
 import { getSiteAssetMap } from "@/lib/site-assets";
 import { signOutAction } from "./actions";
@@ -44,10 +45,11 @@ export default async function AdminLayout({
     return <>{children}</>;
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, profile } = await getCurrentProfile();
+  if (!user || !profile?.is_admin) {
+    redirect(`/admin/login?next=${encodeURIComponent(pathname || "/admin")}`);
+  }
+
   const assets = await getSiteAssetMap(["logo"]);
   const logoSrc = assets.logo;
 
@@ -96,12 +98,10 @@ export default async function AdminLayout({
               <ExternalLink className="h-3.5 w-3.5" />
               View website
             </Link>
-            {user && (
-              <div className="px-3 py-2">
-                <p className="text-xs text-ink-400">Signed in as</p>
-                <p className="truncate text-sm text-ink-700">{user.email}</p>
-              </div>
-            )}
+            <div className="px-3 py-2">
+              <p className="text-xs text-ink-400">Signed in as</p>
+              <p className="truncate text-sm text-ink-700">{user.email}</p>
+            </div>
             <form action={signOutAction}>
               <button
                 type="submit"

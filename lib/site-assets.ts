@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 
 export type SiteAssetKey = "logo" | "home_hero" | "about_image";
 
@@ -13,8 +13,8 @@ export async function getSiteAssetMap(
   keys?: SiteAssetKey[],
 ): Promise<Partial<Record<SiteAssetKey, string>>> {
   try {
-    const supabase = await createClient();
-    let query = supabase
+    const dataClient = await createClient();
+    let query = dataClient
       .from("site_assets")
       .select("key, image_url")
       .not("image_url", "is", null);

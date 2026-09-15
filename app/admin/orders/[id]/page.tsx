@@ -2,9 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Phone, Mail, MapPin } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { formatPrice, whatsappUrl } from "@/lib/format";
-import type { Order, OrderItem } from "@/lib/supabase/types";
+import type { Order, OrderItem } from "@/lib/local-data/types";
 import { OrderStatusForm } from "./status-form";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +15,9 @@ export default async function AdminOrderDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
-  const { data: order } = await supabase
+  const { data: order } = await dataClient
     .from("orders")
     .select("*")
     .eq("id", id)

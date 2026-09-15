@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Pencil, Star, EyeOff } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { discountPercent, formatPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -12,9 +12,9 @@ type Props = {
 
 export default async function AdminProductsPage({ searchParams }: Props) {
   const { q, featured } = await searchParams;
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
-  let query = supabase
+  let query = dataClient
     .from("products")
     .select("*, categories(name, slug)")
     .order("created_at", { ascending: false });

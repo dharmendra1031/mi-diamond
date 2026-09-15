@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Package } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/local-data/server";
+import { getCurrentUser } from "@/lib/local-data/auth";
 import { formatPrice } from "@/lib/format";
-import type { Order, OrderStatus } from "@/lib/supabase/types";
+import type { Order, OrderStatus } from "@/lib/local-data/types";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +27,9 @@ const STATUS_COLOR: Record<OrderStatus, string> = {
 
 export default async function MyOrdersPage() {
   const user = await getCurrentUser();
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
-  const { data: orders } = await supabase
+  const { data: orders } = await dataClient
     .from("orders")
     .select("*")
     .eq("user_id", user!.id)

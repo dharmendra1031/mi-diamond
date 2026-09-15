@@ -1,13 +1,13 @@
 import { ImageIcon } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { SiteImagesForm } from "@/components/admin/site-images-form";
 import type { SiteAsset } from "@/lib/site-assets";
 
 export const dynamic = "force-dynamic";
 
 export default async function SiteImagesPage() {
-  const supabase = await createClient();
-  const { data } = await supabase
+  const dataClient = await createClient();
+  const { data } = await dataClient
     .from("site_assets")
     .select("key, label, image_url, storage_path")
     .order("label");
