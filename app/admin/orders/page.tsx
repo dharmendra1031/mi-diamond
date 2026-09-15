@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { formatPrice } from "@/lib/format";
-import type { Order, OrderStatus } from "@/lib/supabase/types";
+import type { Order, OrderStatus } from "@/lib/local-data/types";
 
 export const dynamic = "force-dynamic";
 
@@ -29,9 +29,9 @@ export default async function AdminOrdersPage({
   searchParams: Promise<{ status?: OrderStatus }>;
 }) {
   const { status } = await searchParams;
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
-  let query = supabase
+  let query = dataClient
     .from("orders")
     .select("*")
     .order("created_at", { ascending: false });

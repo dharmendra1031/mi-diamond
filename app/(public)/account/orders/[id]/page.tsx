@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/local-data/server";
+import { getCurrentUser } from "@/lib/local-data/auth";
 import { formatPrice, whatsappUrl } from "@/lib/format";
-import type { Order, OrderItem, OrderStatus } from "@/lib/supabase/types";
+import type { Order, OrderItem, OrderStatus } from "@/lib/local-data/types";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +33,9 @@ export default async function CustomerOrderDetailPage({
 }) {
   const { id } = await params;
   const user = await getCurrentUser();
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
-  const { data: order } = await supabase
+  const { data: order } = await dataClient
     .from("orders")
     .select("*")
     .eq("id", id)

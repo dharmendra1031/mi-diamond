@@ -9,7 +9,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/format";
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { getSiteAssetMap } from "@/lib/site-assets";
 
 export async function SiteFooter() {
@@ -18,7 +18,7 @@ export async function SiteFooter() {
     const { profile } = await getCurrentProfile();
     isAdmin = profile?.is_admin ?? false;
   } catch {
-    // Render an anonymous footer when Supabase env vars are missing.
+    // Render an anonymous footer when dataClient env vars are missing.
   }
 
   const assets = await getSiteAssetMap(["logo"]);

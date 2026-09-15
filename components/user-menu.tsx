@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { User, LogIn, ShoppingBag, LogOut, UserCircle, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 type Props = {
   loggedIn: boolean;
@@ -29,8 +29,8 @@ export function UserMenu({ loggedIn, fullName, email, isAdmin }: Props) {
   }, []);
 
   async function onSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    const dataClient = createClient();
+    await dataClient.auth.signOut();
     router.push("/");
     router.refresh();
   }

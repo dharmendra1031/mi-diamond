@@ -7,7 +7,7 @@ import {
   LogOut,
   Settings,
 } from "lucide-react";
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { signOutAction } from "./actions";
 
 export const metadata = { title: "My Account" };

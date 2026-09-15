@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { ProductCard } from "@/components/product-card";
-import type { Product } from "@/lib/supabase/types";
+import type { Product } from "@/lib/local-data/types";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Search" };
@@ -16,9 +16,9 @@ export default async function SearchPage({ searchParams }: Props) {
   let products: Product[] = [];
   if (query) {
     try {
-      const supabase = await createClient();
+      const dataClient = await createClient();
       const term = `%${query}%`;
-      const { data } = await supabase
+      const { data } = await dataClient
         .from("products")
         .select("*")
         .eq("is_published", true)

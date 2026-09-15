@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/supabase/auth";
+import { getCurrentUser } from "@/lib/local-data/auth";
 import { RegisterForm } from "./register-form";
 
 export const metadata = { title: "Create Account" };

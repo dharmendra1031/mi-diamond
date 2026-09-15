@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { slugify } from "@/lib/format";
 import { requireAdmin } from "@/lib/local-auth";
 
@@ -13,8 +13,8 @@ export type AdminActionState = {
 const initialActionState: AdminActionState = { error: null };
 
 export async function signOutAction() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  const dataClient = await createClient();
+  await dataClient.auth.signOut();
   redirect("/admin/login");
 }
 
@@ -34,7 +34,7 @@ function parseOptionalPrice(value: FormDataEntryValue | null): number | null {
 export async function createProductAction(formData: FormData) {
   if (!(await requireAdmin())) return { error: "Administrator access required." };
 
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return { error: "Product name is required." };
@@ -63,7 +63,7 @@ export async function createProductAction(formData: FormData) {
     stock_status: String(formData.get("stock_status") ?? "available"),
   };
 
-  const { data, error } = await supabase
+  const { data, error } = await dataClient
     .from("products")
     .insert(payload)
     .select("id")
@@ -87,7 +87,7 @@ export async function createProductFormAction(
 export async function updateProductAction(id: string, formData: FormData) {
   if (!(await requireAdmin())) return { error: "Administrator access required." };
 
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return { error: "Product name is required." };
@@ -113,7 +113,7 @@ export async function updateProductAction(id: string, formData: FormData) {
     stock_status: String(formData.get("stock_status") ?? "available"),
   };
 
-  const { error } = await supabase.from("products").update(payload).eq("id", id);
+  const { error } = await dataClient.from("products").update(payload).eq("id", id);
   if (error) return { error: error.message };
 
   revalidatePath("/");
@@ -134,8 +134,8 @@ export async function updateProductFormAction(
 export async function deleteProductAction(id: string) {
   if (!(await requireAdmin())) return { error: "Administrator access required." };
 
-  const supabase = await createClient();
-  const { error } = await supabase.from("products").delete().eq("id", id);
+  const dataClient = await createClient();
+  const { error } = await dataClient.from("products").delete().eq("id", id);
   if (error) return { error: error.message };
 
   revalidatePath("/");
@@ -147,7 +147,7 @@ export async function deleteProductAction(id: string) {
 export async function upsertCategoryAction(formData: FormData) {
   if (!(await requireAdmin())) return { error: "Administrator access required." };
 
-  const supabase = await createClient();
+  const dataClient = await createClient();
 
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
@@ -161,13 +161,13 @@ export async function upsertCategoryAction(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim() || null;
 
   if (id) {
-    const { error } = await supabase
+    const { error } = await dataClient
       .from("categories")
       .update({ name, slug, sort_order: sortOrder, description })
       .eq("id", id);
     if (error) return { error: error.message };
   } else {
-    const { error } = await supabase
+    const { error } = await dataClient
       .from("categories")
       .insert({ name, slug, sort_order: sortOrder, description });
     if (error) return { error: error.message };
@@ -189,14 +189,14 @@ export async function upsertCategoryFormAction(
 export async function deleteCategoryAction(id: string) {
   if (!(await requireAdmin())) return { error: "Administrator access required." };
 
-  const supabase = await createClient();
-  const { error: productError } = await supabase
+  const dataClient = await createClient();
+  const { error: productError } = await dataClient
     .from("products")
     .update({ category_id: null })
     .eq("category_id", id);
   if (productError) return { error: productError.message };
 
-  const { error } = await supabase.from("categories").delete().eq("id", id);
+  const { error } = await dataClient.from("categories").delete().eq("id", id);
   if (error) return { error: error.message };
 
   revalidatePath("/");

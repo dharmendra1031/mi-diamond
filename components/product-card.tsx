@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { discountPercent, formatPrice } from "@/lib/format";
 import { getDisplayCover } from "@/lib/product-images";
-import type { Product } from "@/lib/supabase/types";
+import type { Product } from "@/lib/local-data/types";
 
 export function ProductCard({ product }: { product: Product }) {
   const hasPrice = product.price > 0;

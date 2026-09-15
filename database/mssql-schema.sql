@@ -167,7 +167,7 @@ ON target.id = source.id
 WHEN MATCHED THEN UPDATE SET slug = source.slug, name = source.name, sort_order = source.sort_order
 WHEN NOT MATCHED THEN INSERT (id, slug, name, sort_order) VALUES (source.id, source.slug, source.name, source.sort_order);
 
-/* Current catalogue migrated from Supabase. Product image values point to local VPS files. */
+/* Current catalogue migrated from dataClient. Product image values point to local VPS files. */
 MERGE dbo.products AS target
 USING (VALUES
   (CAST('cc952a3b-3537-4062-9aee-deffd43ccdde' AS UNIQUEIDENTIFIER), N'signature-18k-gold-jewellery-set', N'Signature 18K Gold Jewellery Set', N'A coordinated Michael Jewellery gold set featuring necklace, bracelet, ring and earrings in a polished statement design. Contact the store for current price and availability.', CAST('cce015ae-18b5-42e2-ba47-2551928b4082' AS UNIQUEIDENTIFIER), CAST(0 AS DECIMAL(12,3)), N'KWD', N'["/uploads/products/catalog/signature-18k-gold-jewellery-set-1.jpg","/uploads/products/catalog/signature-18k-gold-jewellery-set-2.jpg"]', N'18K Yellow Gold', NULL, N'Approx. 37 g', NULL, 1, 1, N'available', NULL),

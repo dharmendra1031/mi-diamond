@@ -12,7 +12,7 @@ This guide covers a fresh setup, SQL Server configuration, local image storage, 
 - Local VPS filesystem for product/site images
 - Custom MSSQL-backed admin authentication
 
-Supabase is not required at runtime on the `feature/mssql-local-storage` branch.
+dataClient is not required at runtime on the `feature/mssql-local-storage` branch.
 
 ## 2. Current VPS Reference
 

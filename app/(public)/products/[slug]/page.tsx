@@ -7,7 +7,7 @@ import {
   Phone,
   ShieldCheck,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import {
   discountPercent,
   formatPrice,
@@ -18,7 +18,7 @@ import {
 import { ProductCard } from "@/components/product-card";
 import { ProductGallery } from "@/components/product-gallery";
 import { getDisplayImages } from "@/lib/product-images";
-import type { Product, ProductWithCategory } from "@/lib/supabase/types";
+import type { Product, ProductWithCategory } from "@/lib/local-data/types";
 
 export const revalidate = 60;
 
@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: Props) {
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
 
-  const supabase = await createClient();
-  const { data: product } = await supabase
+  const dataClient = await createClient();
+  const { data: product } = await dataClient
     .from("products")
     .select("*, categories(id, slug, name)")
     .eq("slug", slug)
@@ -48,7 +48,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const message = `Hello Michael Jewellery, I would like information about ${product.name} (${priceText}).`;
 
   const { data: relatedRaw } = product.category_id
-    ? await supabase
+    ? await dataClient
         .from("products")
         .select("*")
         .eq("is_published", true)

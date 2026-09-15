@@ -86,7 +86,7 @@ Existing catalogue/site images are copied into `public/uploads` and the database
 
 ### Admin Account
 
-Supabase password hashes cannot be exported. Configure `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local`, then run:
+dataClient password hashes cannot be exported. Configure `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local`, then run:
 
 ```bash
 npm run create-admin
@@ -139,7 +139,7 @@ database/        MSSQL schema, seed and deployment notes
 lib/
   mssql.ts       SQL Server connection pool
   local-auth.ts  Local session/password authentication
-  supabase/      Temporary compatibility adapter used by existing page imports; backed by MSSQL/local APIs, not Supabase
+  dataClient/      Temporary compatibility adapter used by existing page imports; backed by MSSQL/local APIs, not dataClient
 public/
   michael-jewellery/   Brand assets
   uploads/             Runtime product/site uploads (gitignored)
@@ -148,4 +148,4 @@ scripts/
   migrate-images.ps1
 ```
 
-The `lib/supabase` directory name remains temporarily to minimize UI/page churn during this migration branch. It no longer imports or connects to Supabase.
+The `lib/local-data` directory name remains temporarily to minimize UI/page churn during this migration branch. It no longer imports or connects to dataClient.

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, Mail } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 export function ForgotForm() {
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,8 @@ export function ForgotForm() {
     const fd = new FormData(e.currentTarget);
     const email = String(fd.get("email") ?? "").trim();
 
-    const supabase = createClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+    const dataClient = createClient();
+    const { error: resetError } = await dataClient.auth.resetPasswordForEmail(
       email,
       { redirectTo: `${window.location.origin}/reset-password` },
     );

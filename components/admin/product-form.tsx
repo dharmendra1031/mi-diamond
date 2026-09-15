@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GripVertical, Loader2, Upload, X } from "lucide-react";
-import type { Category, Product } from "@/lib/supabase/types";
+import type { Category, Product } from "@/lib/local-data/types";
 
 const METAL_OPTIONS = [
   "18K Yellow Gold",

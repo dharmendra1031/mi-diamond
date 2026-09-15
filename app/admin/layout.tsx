@@ -10,7 +10,7 @@ import {
   LogOut,
   ExternalLink,
 } from "lucide-react";
-import { getCurrentProfile } from "@/lib/supabase/auth";
+import { getCurrentProfile } from "@/lib/local-data/auth";
 import { siteConfig } from "@/lib/format";
 import { getSiteAssetMap } from "@/lib/site-assets";
 import { signOutAction } from "./actions";

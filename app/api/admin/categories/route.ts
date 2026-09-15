@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { slugify } from "@/lib/format";
 import { requireAdmin } from "@/lib/local-auth";
 
@@ -25,16 +25,16 @@ export async function POST(request: Request) {
 
     const sortOrder = parseInt(String(formData.get("sort_order") ?? "0"), 10) || 0;
     const description = String(formData.get("description") ?? "").trim() || null;
-    const supabase = await createClient();
+    const dataClient = await createClient();
 
     if (id) {
-      const { error } = await supabase
+      const { error } = await dataClient
         .from("categories")
         .update({ name, slug, sort_order: sortOrder, description })
         .eq("id", id);
       if (error) return fail(error.message, 500);
     } else {
-      const { error } = await supabase
+      const { error } = await dataClient
         .from("categories")
         .insert({ name, slug, sort_order: sortOrder, description });
       if (error) return fail(error.message, 500);
@@ -57,14 +57,14 @@ export async function DELETE(request: Request) {
     const id = String(body.id ?? "");
     if (!id) return fail("Category id is required.");
 
-    const supabase = await createClient();
-    const { error: productError } = await supabase
+    const dataClient = await createClient();
+    const { error: productError } = await dataClient
       .from("products")
       .update({ category_id: null })
       .eq("category_id", id);
     if (productError) return fail(productError.message, 500);
 
-    const { error } = await supabase.from("categories").delete().eq("id", id);
+    const { error } = await dataClient.from("categories").delete().eq("id", id);
     if (error) return fail(error.message, 500);
 
     revalidatePath("/");

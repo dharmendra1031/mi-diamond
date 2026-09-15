@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 export function ResetForm() {
   const router = useRouter();
@@ -30,8 +30,8 @@ export function ResetForm() {
       return;
     }
 
-    const supabase = createClient();
-    const { error: updateError } = await supabase.auth.updateUser({ password });
+    const dataClient = createClient();
+    const { error: updateError } = await dataClient.auth.updateUser({ password });
 
     if (updateError) {
       setError(updateError.message);

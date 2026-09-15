@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Loader2, Check } from "lucide-react";
 import { updateOrderStatusAction } from "@/app/admin/order-actions";
-import type { OrderStatus } from "@/lib/supabase/types";
+import type { OrderStatus } from "@/lib/local-data/types";
 
 const OPTIONS: { value: OrderStatus; label: string }[] = [
   { value: "new", label: "New" },

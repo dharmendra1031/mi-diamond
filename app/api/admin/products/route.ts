@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { slugify } from "@/lib/format";
 import { requireAdmin } from "@/lib/local-auth";
 
@@ -63,8 +63,8 @@ export async function POST(request: Request) {
     const parsed = productPayload(formData);
     if ("error" in parsed) return fail(parsed.error);
 
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const dataClient = await createClient();
+    const { data, error } = await dataClient
       .from("products")
       .insert(parsed.payload)
       .select("id")
@@ -91,8 +91,8 @@ export async function PATCH(request: Request) {
     const parsed = productPayload(formData, "existing");
     if ("error" in parsed) return fail(parsed.error);
 
-    const supabase = await createClient();
-    const { error } = await supabase.from("products").update(parsed.payload).eq("id", id);
+    const dataClient = await createClient();
+    const { error } = await dataClient.from("products").update(parsed.payload).eq("id", id);
     if (error) return fail(error.message, 500);
 
     revalidatePath("/");
@@ -113,8 +113,8 @@ export async function DELETE(request: Request) {
     const id = String(body.id ?? "");
     if (!id) return fail("Product id is required.");
 
-    const supabase = await createClient();
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const dataClient = await createClient();
+    const { error } = await dataClient.from("products").delete().eq("id", id);
     if (error) return fail(error.message, 500);
 
     revalidatePath("/");

@@ -1,6 +1,6 @@
 # MSSQL + Local Image Storage Cutover
 
-This branch replaces the Supabase runtime with Microsoft SQL Server and local VPS image storage.
+This branch replaces the dataClient runtime with Microsoft SQL Server and local VPS image storage.
 
 ## 1. SQL Server prerequisites
 
@@ -28,7 +28,7 @@ Change it to `true` only after HTTPS is enabled.
 
 ## 4. Install the new dependency
 
-The dependency tree changed from Supabase to `mssql`, so this branch intentionally regenerates the npm lockfile:
+The dependency tree changed from dataClient to `mssql`, so this branch intentionally regenerates the npm lockfile:
 
 ```powershell
 npm install
@@ -62,7 +62,7 @@ Set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `ADMIN_NAME` in `.env.local`
 npm run create-admin
 ```
 
-Supabase Auth password hashes cannot be exported, so the admin password must be created once in MSSQL.
+dataClient Auth password hashes cannot be exported, so the admin password must be created once in MSSQL.
 
 ## 7. Build
 

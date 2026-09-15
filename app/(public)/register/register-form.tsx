@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/local-data/client";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -28,8 +28,8 @@ export function RegisterForm() {
       return;
     }
 
-    const supabase = createClient();
-    const { data, error: authError } = await supabase.auth.signUp({
+    const dataClient = createClient();
+    const { data, error: authError } = await dataClient.auth.signUp({
       email,
       password,
       options: {

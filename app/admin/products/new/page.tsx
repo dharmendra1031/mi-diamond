@@ -1,13 +1,13 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/local-data/server";
 import { ProductForm } from "@/components/admin/product-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewProductPage() {
-  const supabase = await createClient();
-  const { data: categories } = await supabase
+  const dataClient = await createClient();
+  const { data: categories } = await dataClient
     .from("categories")
     .select("*")
     .order("sort_order");
