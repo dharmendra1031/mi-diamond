@@ -10,6 +10,7 @@ function connectionConfig() {
   const database = process.env.MSSQL_DATABASE;
   const user = process.env.MSSQL_USER;
   const password = process.env.MSSQL_PASSWORD;
+  const instanceName = process.env.MSSQL_INSTANCE_NAME?.trim();
 
   if (!server || !database || !user || !password) {
     throw new Error(
@@ -17,17 +18,15 @@ function connectionConfig() {
     );
   }
 
-  const port = Number(process.env.MSSQL_PORT || 1433);
-
-  return {
+  const config: Record<string, any> = {
     server,
     database,
     user,
     password,
-    port,
     options: {
       encrypt: process.env.MSSQL_ENCRYPT === "true",
       trustServerCertificate: process.env.MSSQL_TRUST_SERVER_CERTIFICATE !== "false",
+      ...(instanceName ? { instanceName } : {}),
     },
     pool: {
       max: Number(process.env.MSSQL_POOL_MAX || 10),
@@ -35,6 +34,12 @@ function connectionConfig() {
       idleTimeoutMillis: 30000,
     },
   };
+
+  if (!instanceName) {
+    config.port = Number(process.env.MSSQL_PORT || 1433);
+  }
+
+  return config;
 }
 
 export async function getPool() {
