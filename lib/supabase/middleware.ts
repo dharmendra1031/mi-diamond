@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/local-auth";
+
+const SESSION_COOKIE = "mi_session";
 
 const disabledStorefrontRoutes = [
   "/account",
