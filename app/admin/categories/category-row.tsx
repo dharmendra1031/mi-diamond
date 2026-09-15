@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Pencil, Trash2, X } from "lucide-react";
-import { deleteCategoryAction } from "@/app/admin/actions";
 import { CategoryForm } from "./category-form";
 
 export function CategoryRow({
@@ -20,6 +20,7 @@ export function CategoryRow({
   description: string | null;
   productCount: number;
 }) {
+  const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -36,8 +37,17 @@ export function CategoryRow({
       return;
     }
     startTransition(async () => {
-      const result = await deleteCategoryAction(id);
-      if (result?.error) alert(result.error);
+      const response = await fetch("/api/admin/categories", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        alert(result?.error?.message ?? "Category delete failed.");
+        return;
+      }
+      router.refresh();
     });
   }
 

@@ -1,16 +1,10 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { GripVertical, Loader2, Upload, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import {
-  createProductFormAction,
-  updateProductFormAction,
-  deleteProductAction,
-} from "@/app/admin/actions";
 import type { Category, Product } from "@/lib/supabase/types";
 
 const METAL_OPTIONS = [
@@ -39,11 +33,7 @@ export function ProductForm({
   categories: Category[];
 }) {
   const router = useRouter();
-  const [deletePending, startTransition] = useTransition();
-  const action = product
-    ? updateProductFormAction.bind(null, product.id)
-    : createProductFormAction;
-  const [state, formAction] = useActionState(action, { error: null });
+  const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [uploading, setUploading] = useState(false);
@@ -100,14 +90,48 @@ export function ProductForm({
     if (!confirm(`Delete "${product.name}"?`)) return;
 
     startTransition(async () => {
-      await deleteProductAction(product.id);
+      const response = await fetch("/api/admin/products", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id: product.id }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        setError(result?.error?.message ?? "Product delete failed.");
+        return;
+      }
+      router.push("/admin/products");
+      router.refresh();
     });
   }
 
-  const displayError = error ?? state.error;
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+
+    const formData = new FormData(event.currentTarget);
+    formData.delete("images");
+    images.forEach((url) => formData.append("images", url));
+    if (product) formData.set("id", product.id);
+
+    startTransition(async () => {
+      const response = await fetch("/api/admin/products", {
+        method: product ? "PATCH" : "POST",
+        body: formData,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.error) {
+        setError(result?.error?.message ?? "Product save failed.");
+        return;
+      }
+      const id = result?.data?.id ?? product?.id;
+      router.push(`/admin/products/${id}?ok=1`);
+      router.refresh();
+    });
+  }
 
   return (
-    <form action={formAction} className="grid gap-8 lg:grid-cols-[1fr_320px]">
+    <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
         <Section title="Basic Information">
           <Field label="Product Name *" name="name" defaultValue={product?.name} required />
@@ -223,7 +247,7 @@ export function ProductForm({
           )}
         </Section>
 
-        {displayError && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{displayError}</div>}
+        {error && <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
       </div>
 
       <aside className="space-y-6 lg:sticky lg:top-10 lg:h-fit">
@@ -233,33 +257,24 @@ export function ProductForm({
         </Section>
 
         <div className="space-y-3">
-          <SubmitButton uploading={uploading} label={product ? "Save Changes" : "Add Product"} />
+          <button type="submit" disabled={pending || uploading} className="w-full rounded-full bg-ink-700 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 disabled:opacity-60">
+            {pending || uploading ? (
+              <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? "Uploading..." : "Saving..."}</span>
+            ) : product ? "Save Changes" : "Add Product"}
+          </button>
 
           <button type="button" onClick={() => router.back()} className="w-full rounded-full border border-ink-200 bg-white py-3 text-sm text-ink-500 hover:text-ink-700">
             Cancel
           </button>
 
           {product && (
-            <button type="button" disabled={deletePending} onClick={onDelete} className="w-full text-xs text-red-500 hover:underline disabled:opacity-60">
-              {deletePending ? "Deleting..." : "Delete this product"}
+            <button type="button" disabled={pending} onClick={onDelete} className="w-full text-xs text-red-500 hover:underline disabled:opacity-60">
+              {pending ? "Working..." : "Delete this product"}
             </button>
           )}
         </div>
       </aside>
     </form>
-  );
-}
-
-function SubmitButton({ uploading, label }: { uploading: boolean; label: string }) {
-  const { pending } = useFormStatus();
-  const disabled = pending || uploading;
-
-  return (
-    <button type="submit" disabled={disabled} className="w-full rounded-full bg-ink-700 py-3 text-sm font-medium text-cream transition hover:bg-ink-600 disabled:opacity-60">
-      {disabled ? (
-        <span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> {uploading ? "Uploading..." : "Saving..."}</span>
-      ) : label}
-    </button>
   );
 }
 
