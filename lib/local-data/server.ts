@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 import { execute, query } from "@/lib/mssql";
+import { normalizeMediaUrl } from "@/lib/media-url";
 
 const SESSION_COOKIE = "mi_session";
 
@@ -97,6 +98,15 @@ function normalizeRow(table: string, row: Record<string, any>) {
 
   for (const [key, value] of Object.entries(next)) {
     if (value instanceof Date) next[key] = value.toISOString();
+  }
+
+  if (table === "site_assets" && typeof next.image_url === "string") {
+    next.image_url = normalizeMediaUrl(next.image_url);
+  }
+  if (table === "products" && Array.isArray(next.images)) {
+    next.images = next.images.map((url: unknown) =>
+      typeof url === "string" ? normalizeMediaUrl(url) : url,
+    );
   }
 
   if ("__rel_category_id" in next) {
