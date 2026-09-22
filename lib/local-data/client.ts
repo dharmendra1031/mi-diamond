@@ -86,7 +86,7 @@ function storageBucket(bucket: string) {
     },
     getPublicUrl(path: string) {
       const clean = path.split("/").map(encodeURIComponent).join("/");
-      return { data: { publicUrl: `/uploads/${encodeURIComponent(bucket)}/${clean}` } };
+      return { data: { publicUrl: `/api/media/${encodeURIComponent(bucket)}/${clean}` } };
     },
     async remove(paths: string[]) {
       const response = await fetch("/api/upload", {

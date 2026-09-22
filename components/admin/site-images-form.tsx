@@ -17,6 +17,11 @@ const definitions: Array<{ key: SiteAssetKey; label: string; hint: string }> = [
   { key: "about_image", label: "About Page Image", hint: "Main image on the About page." },
 ];
 
+function uploadPath(key: SiteAssetKey, file: File) {
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  return `${key}/${globalThis.crypto.randomUUID()}.${ext}`;
+}
+
 export function SiteImagesForm({ assets }: { assets: SiteAsset[] }) {
   const router = useRouter();
   const [busyKey, setBusyKey] = useState<SiteAssetKey | null>(null);
@@ -30,22 +35,24 @@ export function SiteImagesForm({ assets }: { assets: SiteAsset[] }) {
 
     try {
       const dataClient = createClient();
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-      const path = `${key}/${Date.now()}.${ext}`;
+      const path = uploadPath(key, file);
 
-      const { error: uploadError } = await dataClient.storage
+      const { data: uploadData, error: uploadError } = await dataClient.storage
         .from("site-assets")
         .upload(path, file, { contentType: file.type, upsert: false });
       if (uploadError) throw uploadError;
 
-      const { data: publicData } = dataClient.storage.from("site-assets").getPublicUrl(path);
+      const publicUrl = uploadData?.publicUrl;
+      if (!publicUrl || typeof publicUrl !== "string") {
+        throw new Error("Upload response did not include an image URL.");
+      }
       const definition = definitions.find((item) => item.key === key)!;
 
       const { error: saveError } = await dataClient.from("site_assets").upsert(
         {
           key,
           label: definition.label,
-          image_url: publicData.publicUrl,
+          image_url: publicUrl,
           storage_path: path,
           updated_at: new Date().toISOString(),
         },
